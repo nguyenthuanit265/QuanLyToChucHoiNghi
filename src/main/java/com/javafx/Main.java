@@ -2,25 +2,41 @@ package com.javafx;
 
 import com.javafx.config.HibernateConfig;
 import com.javafx.controller.Controller;
+import com.javafx.entity.Role;
 import com.javafx.repository.RoleRepository;
+import com.javafx.repository.TestRepository;
 import com.javafx.repository.impl.RoleRepositoryImpl;
+import com.javafx.repository.impl.TestRepositoryImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 
+//@Configuration
+//@ComponentScan("com")
 @SpringBootConfiguration
+@ComponentScan(basePackages = {"com"})
 public class Main extends Application {
     private ConfigurableApplicationContext springContext;
     //    private RoleRepository roleRepository = new RoleRepositoryImpl();
     FXMLLoader fxmlLoader = null;
     Parent root;
+
+    @Autowired
+    Controller controller;
 
     @Override
     public void init() throws Exception {
@@ -32,10 +48,15 @@ public class Main extends Application {
                         AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE,
                         true
                 );
-//        springContext.getBean(HibernateConfig.class);
-//        springContext.getBean(RoleRepositoryImpl.class);
-
+//        fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"));
+//        fxmlLoader.setControllerFactory(springContext::getBean);
+//        root = fxmlLoader.load();
+//        springContext.getBean(TestRepository.class);
+//
+//        springContext.getBean(TestRepositoryImpl.class);
+//        springContext.getBean(UserAccountRepository.class);
     }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -55,8 +76,13 @@ public class Main extends Application {
         primaryStage.setMinHeight(600.0);
         primaryStage.show();
 
-        Controller mainController = new Controller();
-//        mainController.populateTableViewBooks();
+
+    }
+
+
+    @Override
+    public void stop() throws Exception {
+        springContext.stop();
     }
 
 
