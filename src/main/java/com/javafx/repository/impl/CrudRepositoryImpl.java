@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +39,17 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
     public List<T> findAll() {
         try {
             Session session = sessionFactory.getCurrentSession();
+            Transaction trans = session.beginTransaction();
+
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<T> query = (CriteriaQuery<T>) builder.createQuery(clazz);
             Root<T> root = (Root<T>) query.from(clazz);
             query.select(root);
             Query<T> q = session.createQuery(query);
-            return q.getResultList();
+            List<T> list = q.getResultList();
+            trans.commit();
+
+            return list;
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
@@ -64,10 +70,11 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
 
     public void save(T entity) {
         Session session = sessionFactory.getCurrentSession();
+        Transaction trans = session.beginTransaction();
         try {
             // Truy vấn dữ liệu
             session.saveOrUpdate(entity);
-
+            trans.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
         }

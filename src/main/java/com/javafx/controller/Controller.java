@@ -19,8 +19,8 @@ public class Controller {
     private ConfigurableApplicationContext springContext;
 //    RoleRepository roleRepository = new RoleRepositoryImpl();
 
-    @Autowired
-    TestRepository testRepository;
+//    @Autowired
+//    TestRepository testRepository;
 
 
     @Autowired
@@ -36,7 +36,7 @@ public class Controller {
     @PostConstruct
     public void init() {
         Role role = new Role("ROLE_ADMIN", "admin");
-        testRepository.SaveOrUpdate(role);
+        roleRepository.save(role);
     }
 
     public void populateTableViewBooks() {

@@ -27,7 +27,7 @@ import java.util.List;
 
 //@Configuration
 //@ComponentScan("com")
-@SpringBootConfiguration
+@Configuration
 @ComponentScan(basePackages = {"com"})
 public class Main extends Application {
     private ConfigurableApplicationContext springContext;
@@ -76,6 +76,7 @@ public class Main extends Application {
         primaryStage.setMinHeight(600.0);
         primaryStage.show();
 
+        controller.populateTableViewBooks();
 
     }
 
