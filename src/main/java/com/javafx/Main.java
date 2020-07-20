@@ -21,6 +21,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.List;
 
@@ -30,6 +35,7 @@ import java.util.List;
 @Configuration
 @ComponentScan(basePackages = {"com"})
 public class Main extends Application {
+    private double x, y;
     private ConfigurableApplicationContext springContext;
     //    private RoleRepository roleRepository = new RoleRepositoryImpl();
     FXMLLoader fxmlLoader = null;
@@ -60,23 +66,38 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
-//        primaryStage.setTitle("Hello World");
-//        primaryStage.setScene(new Scene(root, 300, 275));
+
+
+//        fxmlLoader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+//        root = fxmlLoader.load();
+//
+//        Scene scene = new Scene(root);
+//
+//        primaryStage.setScene(scene);
+//        primaryStage.setMinWidth(720.0);
+//        primaryStage.setMinHeight(600.0);
 //        primaryStage.show();
+//
+//        controller.populateTableViewBooks();
 
-        fxmlLoader = new FXMLLoader(getClass().getResource("/sample.fxml"));
-//        fxmlLoader.setControllerFactory(springContext::getBean);
-        root = fxmlLoader.load();
 
-        Scene scene = new Scene(root);
+        Parent root = FXMLLoader.load(getClass().getResource("/home.fxml"));
+        primaryStage.setScene(new Scene(root));
+        //set stage borderless
+        primaryStage.initStyle(StageStyle.UNDECORATED);
 
-        primaryStage.setScene(scene);
-        primaryStage.setMinWidth(720.0);
-        primaryStage.setMinHeight(600.0);
+        //drag it here
+        root.setOnMousePressed(event -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+        root.setOnMouseDragged(event -> {
+
+            primaryStage.setX(event.getScreenX() - x);
+            primaryStage.setY(event.getScreenY() - y);
+
+        });
         primaryStage.show();
-
-        controller.populateTableViewBooks();
 
     }
 
