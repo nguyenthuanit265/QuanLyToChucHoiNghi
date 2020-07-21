@@ -21,4 +21,7 @@ public class Location implements Serializable {
             fetch = FetchType.LAZY)
     private List<Conference> conferences;
 
+    @Column(name = "is_delete")
+    private boolean isDelete;
+
 }

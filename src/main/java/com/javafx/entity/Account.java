@@ -12,8 +12,6 @@ import java.io.Serializable;
 @Table
 @Entity(name = "accounts")
 @Data
-@Getter
-@Setter
 public class Account implements Serializable {
 
     @Id
@@ -25,15 +23,10 @@ public class Account implements Serializable {
     private String email;
 
     @NotBlank(message = "Vui lòng nhập họ tên!")
-    private String fullname;
+    private String username;
 
     private String password;
 
-    private String avatar;
-    private String phone;
-    private String address;
-    private String website;
-    private String facebook;
 
     @Column(name = "role_id")
     @NotBlank(message = "Vui lòng chọn loại người dùng!")
@@ -43,4 +36,17 @@ public class Account implements Serializable {
     @JoinColumn(name = "role_id",
             insertable = false, updatable = false)
     private Role role;
+
+
+    @Column(name = "conference_id")
+    private int conferenceId;
+
+    @ManyToOne()
+    @JoinColumn(name = "conference_id",
+            insertable = false, updatable = false)
+    private Conference conference;
+
+    @Column(name = "is_delete")
+    private boolean isDelete;
+
 }

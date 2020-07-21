@@ -1,5 +1,9 @@
 package com.javafx.controller;
 
+import com.javafx.entity.Role;
+import com.javafx.repository.RoleRepository;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,12 +15,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class HomeController implements Initializable {
+
+    @Autowired
+    RoleRepository roleRepository;
+    private ObservableList<Role> listRoles;
 
     @FXML
     private VBox pnItems = null;
@@ -30,10 +43,10 @@ public class HomeController implements Initializable {
     private Button btnCustomers;
 
     @FXML
-    private Button btnMenus;
+    private Button btnConference;
 
     @FXML
-    private Button btnPackages;
+    private Button btnRoles;
 
     @FXML
     private Button btnSettings;
@@ -52,6 +65,9 @@ public class HomeController implements Initializable {
 
     @FXML
     private Pane pnlMenus;
+
+    @FXML
+    private Pane pnlRoles;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,8 +100,8 @@ public class HomeController implements Initializable {
             pnlCustomer.setStyle("-fx-background-color : #1620A1");
             pnlCustomer.toFront();
         }
-        if (actionEvent.getSource() == btnMenus) {
-            pnlMenus.setStyle("-fx-background-color : #53639F");
+        if (actionEvent.getSource() == btnConference) {
+            pnlMenus.setStyle("-fx-background-color : #9f0579");
             pnlMenus.toFront();
         }
         if (actionEvent.getSource() == btnOverview) {
@@ -95,6 +111,18 @@ public class HomeController implements Initializable {
         if (actionEvent.getSource() == btnOrders) {
             pnlOrders.setStyle("-fx-background-color : #464F67");
             pnlOrders.toFront();
+        }
+        if (actionEvent.getSource() == btnRoles) {
+            if (listRoles != null && listRoles.size() != 0) {
+                listRoles.removeAll();
+            }
+
+            List<Role> roles = roleRepository.findAll();
+            listRoles = FXCollections.observableList(roles);
+            for (int i = 0; i < roles.size(); i++) {
+                System.out.println(roles.get(i).toString());
+            }
+
         }
     }
 }

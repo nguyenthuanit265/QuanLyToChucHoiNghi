@@ -35,8 +35,8 @@ public class Controller {
 
     @PostConstruct
     public void init() {
-        Role role = new Role("ROLE_ADMIN", "admin");
-        roleRepository.save(role);
+//        Role role = new Role("ROLE_ADMIN", "admin");
+//        roleRepository.save(role);
     }
 
     public void populateTableViewBooks() {

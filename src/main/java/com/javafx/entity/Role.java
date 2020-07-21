@@ -1,6 +1,7 @@
 package com.javafx.entity;
 
 
+import javafx.scene.Node;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class Role implements Serializable {
     @OneToMany(mappedBy = "role",
             fetch = FetchType.LAZY)
     private List<Account> accounts;
+
+    @Column(name = "is_delete")
+    private boolean isDelete;
 
 
     public Role(int id, String name, String description) {

@@ -109,6 +109,43 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+//        String str = "-91283472332";
+//        String strFit = str.trim();
+//        final int INT_MIN = Integer.MIN_VALUE;
+//        final int INT_MAX = Integer.MAX_VALUE;
+//        char[] arrayChar = strFit.toCharArray();
+//        int res = 0;
+//        char sign = ' ';
+//        if ((int) arrayChar[0] == 45 || (int) arrayChar[0] == 43) {
+//            sign = arrayChar[0];
+//            strFit = strFit.substring(1);
+//        }
+//
+//        System.out.println(strFit);
+//        System.out.println("sign: " + sign);
+//
+//        arrayChar = strFit.toCharArray();
+//        if ((int) (arrayChar[0]) > 57 || (int) arrayChar[0] < 48) {
+//            res = 0;
+//        } else {
+//            System.out.println(String.valueOf(INT_MIN));
+//            if (strFit.length() > String.valueOf(INT_MIN).length()) {
+//                res = INT_MIN;
+//            } else if (strFit.length() == String.valueOf(INT_MIN).length()) {
+//                for (int i = 0; i < strFit.length(); i++) {
+//                    if (Integer.parseInt(String.valueOf(strFit.indexOf(i))) > Integer.parseInt(String.valueOf(String.valueOf(INT_MIN).indexOf(i)))) {
+//                        res = INT_MIN;
+//                        break;
+//                    }
+//                }
+//
+//            } else {
+//                res = Integer.parseInt(strFit);
+//            }
+//
+//        }
+//        System.out.println(res);
         launch(args);
+
     }
 }

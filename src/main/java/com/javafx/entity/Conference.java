@@ -1,10 +1,14 @@
 package com.javafx.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "conference")
+@Data
 public class Conference {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +33,13 @@ public class Conference {
     @JoinColumn(name = "id_location",
             insertable = false, updatable = false)
     private Location location;
+
+
+    @OneToMany(mappedBy = "conference",
+            fetch = FetchType.LAZY)
+    private List<Account> accounts;
+
+
+    @Column(name = "is_delete")
+    private boolean isDelete;
 }
