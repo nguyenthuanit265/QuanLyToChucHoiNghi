@@ -42,4 +42,17 @@ public class Conference {
 
     @Column(name = "is_delete")
     private boolean isDelete;
+
+    @Override
+    public String toString() {
+        return "Conference{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", descriptionSummary='" + descriptionSummary + '\'' +
+                ", descriptionDetail='" + descriptionDetail + '\'' +
+                ", image='" + image + '\'' +
+                ", timeStartEvent=" + timeStartEvent +
+                ", idLocation=" + idLocation +
+                '}';
+    }
 }

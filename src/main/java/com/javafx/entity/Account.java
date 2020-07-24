@@ -49,4 +49,18 @@ public class Account implements Serializable {
     @Column(name = "is_delete")
     private boolean isDelete;
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roleId='" + roleId + '\'' +
+                ", role=" + role +
+                ", conferenceId=" + conferenceId +
+                ", conference=" + conference +
+                ", isDelete=" + isDelete +
+                '}';
+    }
 }

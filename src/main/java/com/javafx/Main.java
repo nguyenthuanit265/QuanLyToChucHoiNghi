@@ -1,7 +1,8 @@
 package com.javafx;
 
 import com.javafx.config.HibernateConfig;
-import com.javafx.controller.Controller;
+
+import com.javafx.controller.UIController;
 import com.javafx.entity.Role;
 import com.javafx.repository.RoleRepository;
 import com.javafx.repository.TestRepository;
@@ -35,14 +36,15 @@ import java.util.List;
 @Configuration
 @ComponentScan(basePackages = {"com"})
 public class Main extends Application {
+    public static Stage stage = null;
     private double x, y;
     private ConfigurableApplicationContext springContext;
     //    private RoleRepository roleRepository = new RoleRepositoryImpl();
     FXMLLoader fxmlLoader = null;
     Parent root;
 
-    @Autowired
-    Controller controller;
+//    @Autowired
+//    UIController controller;
 
     @Override
     public void init() throws Exception {
@@ -54,13 +56,8 @@ public class Main extends Application {
                         AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE,
                         true
                 );
-//        fxmlLoader = new FXMLLoader(getClass().getResource("/main.fxml"));
-//        fxmlLoader.setControllerFactory(springContext::getBean);
-//        root = fxmlLoader.load();
-//        springContext.getBean(TestRepository.class);
-//
-//        springContext.getBean(TestRepositoryImpl.class);
-//        springContext.getBean(UserAccountRepository.class);
+        springContext.getBean(RoleRepository.class);
+
     }
 
 
@@ -68,20 +65,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 
-//        fxmlLoader = new FXMLLoader(getClass().getResource("/sample.fxml"));
-//        root = fxmlLoader.load();
-//
-//        Scene scene = new Scene(root);
-//
-//        primaryStage.setScene(scene);
-//        primaryStage.setMinWidth(720.0);
-//        primaryStage.setMinHeight(600.0);
-//        primaryStage.show();
-//
-//        controller.populateTableViewBooks();
-
-
-        Parent root = FXMLLoader.load(getClass().getResource("/home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/admin.fxml"));
         primaryStage.setScene(new Scene(root));
         //set stage borderless
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -99,7 +83,19 @@ public class Main extends Application {
         });
         primaryStage.show();
 
+//        Controller mainController = fxmlLoader.getController();
+//        mainController.populateTableViewBooks();
+
     }
+
+//    @Override
+//    public void start(Stage primaryStage) throws Exception {
+//        Parent root = FXMLLoader.load(getClass().getResource("/admin.fxml"));
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.initStyle(StageStyle.UNDECORATED);
+//        this.stage = primaryStage;
+//        stage.show();
+//    }
 
 
     @Override
@@ -109,42 +105,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-//        String str = "-91283472332";
-//        String strFit = str.trim();
-//        final int INT_MIN = Integer.MIN_VALUE;
-//        final int INT_MAX = Integer.MAX_VALUE;
-//        char[] arrayChar = strFit.toCharArray();
-//        int res = 0;
-//        char sign = ' ';
-//        if ((int) arrayChar[0] == 45 || (int) arrayChar[0] == 43) {
-//            sign = arrayChar[0];
-//            strFit = strFit.substring(1);
-//        }
-//
-//        System.out.println(strFit);
-//        System.out.println("sign: " + sign);
-//
-//        arrayChar = strFit.toCharArray();
-//        if ((int) (arrayChar[0]) > 57 || (int) arrayChar[0] < 48) {
-//            res = 0;
-//        } else {
-//            System.out.println(String.valueOf(INT_MIN));
-//            if (strFit.length() > String.valueOf(INT_MIN).length()) {
-//                res = INT_MIN;
-//            } else if (strFit.length() == String.valueOf(INT_MIN).length()) {
-//                for (int i = 0; i < strFit.length(); i++) {
-//                    if (Integer.parseInt(String.valueOf(strFit.indexOf(i))) > Integer.parseInt(String.valueOf(String.valueOf(INT_MIN).indexOf(i)))) {
-//                        res = INT_MIN;
-//                        break;
-//                    }
-//                }
-//
-//            } else {
-//                res = Integer.parseInt(strFit);
-//            }
-//
-//        }
-//        System.out.println(res);
         launch(args);
 
     }

@@ -9,16 +9,19 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import com.javafx.config.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.javafx.repository.CrudRepository;
 
+@Repository
 @Transactional(rollbackFor = Exception.class)
 public abstract class CrudRepositoryImpl<T, K extends Serializable>
         implements CrudRepository<T, K> {
@@ -38,7 +41,7 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
     @SuppressWarnings("unchecked")
     public List<T> findAll() {
         try {
-            Session session = sessionFactory.getCurrentSession();
+            Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction trans = session.beginTransaction();
 
             CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -82,10 +85,12 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
 
     public void removeById(K id) {
         Session session = sessionFactory.getCurrentSession();
+        Transaction trans = session.beginTransaction();
         try {
             // Truy vấn dữ liệu
             T entity = findById(id);
             session.remove(entity);
+            trans.commit();
 
         } catch (HibernateException e) {
             e.printStackTrace();
