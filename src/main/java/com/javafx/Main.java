@@ -2,6 +2,7 @@ package com.javafx;
 
 import com.javafx.config.HibernateConfig;
 
+import com.javafx.controller.MainController;
 import com.javafx.controller.UIController;
 import com.javafx.entity.Role;
 import com.javafx.repository.RoleRepository;
@@ -65,7 +66,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 
-        Parent root = FXMLLoader.load(getClass().getResource("/admin.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
+        fxmlLoader = new FXMLLoader(getClass().getResource("/admin.fxml"));
+        fxmlLoader.setControllerFactory(springContext::getBean);
+        root = fxmlLoader.load();
+
         primaryStage.setScene(new Scene(root));
         //set stage borderless
         primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -83,8 +88,8 @@ public class Main extends Application {
         });
         primaryStage.show();
 
-//        Controller mainController = fxmlLoader.getController();
-//        mainController.populateTableViewBooks();
+        UIController mainController = fxmlLoader.getController();
+        mainController.populateTableViewBooks();
 
     }
 

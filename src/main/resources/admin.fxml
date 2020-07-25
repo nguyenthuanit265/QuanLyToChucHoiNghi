@@ -3,11 +3,10 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.effect.DropShadow?>
 <AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0" prefWidth="1024.0" styleClass="parent" stylesheets="@stylesheet.css"
             xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
@@ -45,14 +44,15 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Hyperlink fx:id="Home" text="Dashboard" textFill="#7c8184">
+                        <Button fx:id="Home" alignment="BASELINE_LEFT" prefWidth="300.0"
+                                style="-fx-background-color: #333645;" text="Dashboard" textFill="#7c8184">
                             <font>
-                                <Font name="Calibri Light" size="15.0"/>
+                                <Font name="Calibri Light" size="20.0"/>
                             </font>
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
-                        </Hyperlink>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="10.0"/>
@@ -68,15 +68,15 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Hyperlink fx:id="roles" onAction="#findAllRole" text="Role" textFill="#7c8184"
-                                   underline="false">
+                        <Button fx:id="roles" alignment="BASELINE_LEFT" onAction="#findAllRole" prefWidth="300.0"
+                                style="-fx-background-color: #333645;" text="Role" textFill="#7c8184" underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
-                        </Hyperlink>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="10.0"/>
@@ -89,14 +89,15 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Hyperlink text="Users" textFill="#7c8184" underline="false">
+                        <Button alignment="BASELINE_LEFT" prefWidth="300.0" style="-fx-background-color: #333645;"
+                                text="Account" textFill="#7c8184" underline="false" onAction="#findAllAccount">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
-                        </Hyperlink>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="10.0"/>
@@ -109,15 +110,16 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Hyperlink fx:id="conference" onAction="#findAllConference" text="Conference" textFill="#7c8184"
-                                   underline="false">
+                        <Button fx:id="conference" alignment="BASELINE_LEFT" onAction="#findAllConference"
+                                prefWidth="300.0" style="-fx-background-color: #333645;" text="Conference"
+                                textFill="#7c8184" underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
-                        </Hyperlink>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="10.0"/>
@@ -130,15 +132,16 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Hyperlink fx:id="location" onAction="#findAllLocation" text="Location" textFill="#7c8184"
-                                   underline="false">
+                        <Button fx:id="location" alignment="BASELINE_LEFT" onAction="#findAllLocation" prefWidth="300.0"
+                                style="-fx-background-color: #333645;" text="Location" textFill="#7c8184"
+                                underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
-                        </Hyperlink>
+                        </Button>
                     </children>
                     <padding>
                         <Insets left="10.0"/>
@@ -172,109 +175,148 @@
                             </font>
                         </Label>
 
-                        <Label alignment="CENTER" layoutX="659.0" layoutY="18.0" maxHeight="-Infinity"
-                               maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0"
-                               prefWidth="20.0" styleClass="round-lbl" text="8" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="12.0"/>
-                            </font>
-                        </Label>
+<!--                        <Label alignment="CENTER" layoutX="659.0" layoutY="18.0" maxHeight="-Infinity"-->
+                        <!--                               maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0"-->
+                        <!--                               prefWidth="20.0" styleClass="round-lbl" text="8" textFill="WHITE">-->
+                        <!--                            <font>-->
+                        <!--                                <Font name="System Bold" size="12.0"/>-->
+                        <!--                            </font>-->
+                        <!--                        </Label>-->
                     </children>
                 </Pane>
-                <ImageView fitHeight="250.0" fitWidth="724.0" pickOnBounds="true" smooth="false">
-                    <image>
-                        <Image url="@./images/line-chart.jpg"/>
-                    </image>
-                </ImageView>
-                <HBox alignment="CENTER">
-                    <children>
-                        <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                              minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="230.0"
-                              styleClass="card-01" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0"
-                                       style="-fx-background-color: #72D3FE;" text="Total Project">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                                      minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0"
-                                      style="-fx-border-color: #72D3FE;" styleClass="round-box">
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </VBox.margin>
-                                    <children>
-                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0"/>
-                                    </children>
-                                </HBox>
-                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0"
-                                       prefWidth="250.0" style="-fx-background-color: #72D3FE;" text="56%">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
-                              maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                              prefHeight="275.0" prefWidth="230.0" styleClass="card-02" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0"
-                                       style="-fx-background-color: #FFC66C;" text="Completed Projects">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                                      minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0"
-                                      style="-fx-border-color: #72D3FE;" styleClass="round-box">
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </VBox.margin>
-                                    <children>
-                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0"/>
-                                    </children>
-                                </HBox>
-                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0"
-                                       prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="88%">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="260.0" layoutY="10.0" maxHeight="-Infinity"
-                              maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                              prefHeight="275.0" prefWidth="230.0" styleClass="card-03" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0"
-                                       style="-fx-background-color: #45B7AF;" text="Running Projects">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                                      minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0"
-                                      style="-fx-border-color: #72D3FE;" styleClass="round-box">
-                                    <VBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                    </VBox.margin>
-                                    <children>
-                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0"/>
-                                    </children>
-                                </HBox>
-                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0"
-                                       prefWidth="250.0" style="-fx-background-color: #45B7AF;" text="47%">
-                                    <font>
-                                        <Font name="Ebrima Bold" size="15.0"/>
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
+
+
+                <!--                <ImageView fitHeight="250.0" fitWidth="724.0" pickOnBounds="true" smooth="false">-->
+                <!--                    <image>-->
+                <!--                        <Image url="@./images/line-chart.jpg" />-->
+                <!--                    </image>-->
+                <!--                </ImageView>-->
+                <!--                <HBox alignment="CENTER">-->
+                <!--                                    <children>-->
+                <!--                                        <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="230.0" styleClass="card-01" HBox.hgrow="ALWAYS">-->
+                <!--                                            <children>-->
+                <!--                                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #72D3FE;" text="Total Project">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0" style="-fx-border-color: #72D3FE;" styleClass="round-box">-->
+                <!--                                                    <VBox.margin>-->
+                <!--                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+                <!--                                                    </VBox.margin>-->
+                <!--                                                    <children>-->
+                <!--                                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0" />-->
+                <!--                                                    </children>-->
+                <!--                                                </HBox>-->
+                <!--                                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #72D3FE;" text="56%">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                            </children>-->
+                <!--                                        </VBox>-->
+                <!--                                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="230.0" styleClass="card-02" HBox.hgrow="ALWAYS">-->
+                <!--                                            <children>-->
+                <!--                                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="Completed Projects">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0" style="-fx-border-color: #72D3FE;" styleClass="round-box">-->
+                <!--                                                    <VBox.margin>-->
+                <!--                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+                <!--                                                    </VBox.margin>-->
+                <!--                                                    <children>-->
+                <!--                                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0" />-->
+                <!--                                                    </children>-->
+                <!--                                                </HBox>-->
+                <!--                                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #FFC66C;" text="88%">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                            </children>-->
+                <!--                                        </VBox>-->
+                <!--                                        <VBox alignment="TOP_CENTER" layoutX="260.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="230.0" styleClass="card-03" HBox.hgrow="ALWAYS">-->
+                <!--                                            <children>-->
+                <!--                                                <Label alignment="CENTER" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #45B7AF;" text="Running Projects">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="160.0" style="-fx-border-color: #72D3FE;" styleClass="round-box">-->
+                <!--                                                    <VBox.margin>-->
+                <!--                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+                <!--                                                    </VBox.margin>-->
+                <!--                                                    <children>-->
+                <!--                                                        <ProgressIndicator prefHeight="100.0" prefWidth="100.0" />-->
+                <!--                                                    </children>-->
+                <!--                                                </HBox>-->
+                <!--                                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="48.0" prefWidth="250.0" style="-fx-background-color: #45B7AF;" text="47%">-->
+                <!--                                                    <font>-->
+                <!--                                                        <Font name="Ebrima Bold" size="15.0" />-->
+                <!--                                                    </font>-->
+                <!--                                                </Label>-->
+                <!--                                            </children>-->
+                <!--                                        </VBox>-->
+                <!--                                    </children>-->
+                <!--                                </HBox>-->
+
             </children>
+            <AnchorPane prefWidth="724.0" AnchorPane.topAnchor="10.0">
+                <TableView fx:id="tableViews" editable="true" prefWidth="720.0" AnchorPane.bottomAnchor="10.0"
+                           AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                    <columns>
+                        <!--                        <TableColumn maxWidth="90" minWidth="80" text="Mã Sách">-->
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="id"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_name" onEditCommit="#onEditCommit" text="Tên Sách">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="name"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_category" onEditCommit="#onEditCommit" text="Thể loại">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="category"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_author" onEditCommit="#onEditCommit" text="Tác giả">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="author"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_publisher" onEditCommit="#onEditCommit" text="NXB">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="publisher"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_yearpublished" onEditCommit="#onEditCommit" text="Năm XB">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="yearPublished"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                        <!--                        <TableColumn fx:id="col_isbn" onEditCommit="#onEditCommit" text="ISBN">-->
+
+                        <!--                            <cellValueFactory>-->
+                        <!--                                <PropertyValueFactory property="ISBN"/>-->
+                        <!--                            </cellValueFactory>-->
+                        <!--                        </TableColumn>-->
+                    </columns>
+
+                </TableView>
+
+
+            </AnchorPane>
         </VBox>
     </children>
 </AnchorPane>

@@ -1,121 +1,111 @@
 package com.javafx.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import com.javafx.entity.Book;
 
-//import com.javafx.Launch;
-import com.javafx.entity.*;
 import com.javafx.repository.BookRepository;
-import com.javafx.repository.ConferenceRepository;
-import com.javafx.repository.LocationRepository;
 import com.javafx.repository.impl.BookRepositoryImpl;
-import com.javafx.repository.impl.ConferenceRepositoryImpl;
-import com.javafx.repository.impl.LocationRepositoryImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import org.springframework.stereotype.Component;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Controller;
 
-@Component
-public class UIController {
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
+@Controller
+public class MainController implements Initializable {
     public TableColumn<Book, String> col_name;
     public TableColumn<Book, String> col_category;
     public TableColumn<Book, String> col_author;
     public TableColumn<Book, String> col_publisher;
     public TableColumn<Book, String> col_yearpublished;
     public TableColumn<Book, String> col_isbn;
-
     @FXML
     private BorderPane mainBorderPane;
-
-    private double xOffset = 0;
-    private double yOffset = 0;
     @FXML
-    private AnchorPane parent;
-
+    private Button btnSearchBook;
     @FXML
-    private TableView<Object> tableViews;
+    private Button btnAddBook;
+    @FXML
+    private TextField txtfldSearchBook;
+    @FXML
+    private Button btnDeleteBook;
+    @FXML
+    private Button btnRefreshBooks;
+    @FXML
+    private TableView<Book> tableViewBooks;
+
     private ObservableList<Book> listBooks;
 
+    public Button getBtnSearchBook() {
+        return btnSearchBook;
+    }
 
-    ConferenceRepository conferenceRepository = new ConferenceRepositoryImpl();
+    public Button getBtnAddBook() {
+        return btnAddBook;
+    }
 
-    LocationRepository locationRepository = new LocationRepositoryImpl();
+    public TextField getTxtfldSearchBook() {
+        return txtfldSearchBook;
+    }
+
+    public Button getBtnDeleteBook() {
+        return btnDeleteBook;
+    }
+
+    public Button getBtnRefreshBooks() {
+        return btnRefreshBooks;
+    }
+
+    public TableView getTableViewBooks() {
+        return tableViewBooks;
+    }
+
 
     BookRepository bookRepository = new BookRepositoryImpl();
-//    @Override
-//    public void initialize(URL url, ResourceBundle rb) {
-//        // TODO
-//        makeStageDrageable();
-//    }
 
-//    private void makeStageDrageable() {
-//        parent.setOnMousePressed(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                xOffset = event.getSceneX();
-//                yOffset = event.getSceneY();
-//            }
-//        });
-//        parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                Main.stage.setX(event.getScreenX() - xOffset);
-//                Main.stage.setY(event.getScreenY() - yOffset);
-//                Main.stage.setOpacity(0.7f);
-//            }
-//        });
-//        parent.setOnDragDone((e) -> {
-//            Main.stage.setOpacity(1.0f);
-//        });
-//        parent.setOnMouseReleased((e) -> {
-//            Main.stage.setOpacity(1.0f);
-//        });
+    private ConfigurableApplicationContext springContext;
+
+
+//    @PostConstruct
+//    public void contruct() {
+//        Book book = new Book("Việt Nam Sử Lược", "Lịch sử",
+//                "Trần Trọng Kim", "Tri thức", "2006", "128978");
+//        bookRepository.save(book);
 //
 //    }
 
-    public void findAllRole(ActionEvent actionEvent) throws IOException {
-
-//        tableViews = new TableView<>();
-        RoleController roleController = new RoleController();
-        roleController.findAll(tableViews);
+    public MainController() {
     }
 
-
-    public void findAllConference(ActionEvent actionEvent) {
-        List<Conference> cons = conferenceRepository.findAll();
-        for (Conference conference : cons) {
-            System.out.println(conference.toString());
-        }
-    }
-
-    public void findAllLocation(ActionEvent actionEvent) {
-        List<Location> locations = locationRepository.findAll();
-        for (Location location : locations) {
-            System.out.println(location.toString());
-        }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+//        studentList = FXCollections.observableArrayList(
+//                new Student(1, "Chau", "chau@gmail.com", 21),
+//                new Student(2, "Chuong", "chuong@gmail.com", 20)
+//        );
+//        idColumn.setCellValueFactory(new PropertyValueFactory<Student, Integer>("id"));
+//        nameColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("name"));
+//        emailColumn.setCellValueFactory(new PropertyValueFactory<Student, String>("email"));
+//        ageColumn.setCellValueFactory(new PropertyValueFactory<Student, Integer>("age"));
+//        table.setItems(studentList);
     }
 
     public void populateTableViewBooks() {
         //txtfldSearchBook.setText(Double.toString(btnAddBook.getHeight()));
-        final ObservableList<Object> data =
-                FXCollections.observableArrayList(
-                        new Person("Jacob", "Smith", "jacob.smith@example.com"),
-                        new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-                        new Person("Ethan", "Williams", "ethan.williams@example.com"),
-                        new Person("Emma", "Jones", "emma.jones@example.com"),
-                        new Person("Michael", "Brown", "michael.brown@example.com")
-                );
-
-
         if (listBooks != null && listBooks.size() != 0) {
             listBooks.removeAll();
         }
@@ -123,30 +113,8 @@ public class UIController {
         List<Book> books = bookRepository.findAll();
         listBooks = FXCollections.observableList(books);
 
-
-        TableColumn firstNameCol = new TableColumn("First Name");
-        firstNameCol.setMinWidth(100);
-        firstNameCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("firstName"));
-
-        TableColumn lastNameCol = new TableColumn("Last Name");
-        lastNameCol.setMinWidth(100);
-        lastNameCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("lastName"));
-
-        TableColumn emailCol = new TableColumn("Email");
-        emailCol.setMinWidth(200);
-        emailCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("email"));
-
-        tableViews.setItems(data);
-        tableViews.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-
-
-//        tableViews.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-//        tableViews.setItems(listBooks);
+        tableViewBooks.setItems(listBooks);
     }
-
 
     public void addNewBook(ActionEvent actionEvent) throws IOException {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -171,7 +139,7 @@ public class UIController {
 
 
     public void deleteBook(ActionEvent actionEvent) {
-        ObservableList itemsDelete = tableViews.getSelectionModel().getSelectedItems();
+        ObservableList itemsDelete = tableViewBooks.getSelectionModel().getSelectedItems();
         if (itemsDelete.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Xóa sách...");
@@ -235,10 +203,5 @@ public class UIController {
         alert.setContentText("Credits : Minh Thuan & Khanh Hoang");
         alert.initOwner(mainBorderPane.getScene().getWindow());
         alert.showAndWait();
-    }
-
-    public void findAllAccount(ActionEvent actionEvent) {
-        AccountController userController = new AccountController();
-        userController.findAll(tableViews);
     }
 }
