@@ -10,9 +10,11 @@ import com.javafx.repository.TestRepository;
 import com.javafx.repository.impl.RoleRepositoryImpl;
 import com.javafx.repository.impl.TestRepositoryImpl;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -29,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 
@@ -43,6 +46,9 @@ public class Main extends Application {
     //    private RoleRepository roleRepository = new RoleRepositoryImpl();
     FXMLLoader fxmlLoader = null;
     Parent root;
+
+    @FXML
+    Button btnConference;
 
 //    @Autowired
 //    UIController controller;
@@ -64,11 +70,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        loadHomeView(primaryStage);
+    }
 
-
-//        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
+    public void loadHomeView(Stage primaryStage) throws java.io.IOException {
+        //        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
         fxmlLoader = new FXMLLoader(getClass().getResource("/admin.fxml"));
-        fxmlLoader.setControllerFactory(springContext::getBean);
+//        fxmlLoader.setControllerFactory(springContext::getBean);
         root = fxmlLoader.load();
 
         primaryStage.setScene(new Scene(root));
@@ -88,9 +96,8 @@ public class Main extends Application {
         });
         primaryStage.show();
 
-        UIController mainController = fxmlLoader.getController();
-        mainController.populateTableViewBooks();
-
+//        UIController mainController = fxmlLoader.getController();
+//        mainController.findAllConference();
     }
 
 //    @Override

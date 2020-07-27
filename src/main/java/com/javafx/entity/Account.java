@@ -30,9 +30,9 @@ public class Account implements Serializable {
 
     @Column(name = "role_id")
     @NotBlank(message = "Vui lòng chọn loại người dùng!")
-    private String roleId;
+    private int roleId;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id",
             insertable = false, updatable = false)
     private Role role;
@@ -41,13 +41,16 @@ public class Account implements Serializable {
     @Column(name = "conference_id")
     private int conferenceId;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conference_id",
             insertable = false, updatable = false)
     private Conference conference;
 
     @Column(name = "is_delete")
-    private boolean isDelete;
+    private boolean isDelete = false;
+
+    @Column(name = "is_block")
+    private boolean isBlock = false;
 
     @Override
     public String toString() {
@@ -62,5 +65,16 @@ public class Account implements Serializable {
                 ", conference=" + conference +
                 ", isDelete=" + isDelete +
                 '}';
+    }
+
+    public Account(String email, String username, String password, int roleId, int conferenceId) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.roleId = roleId;
+        this.conferenceId = conferenceId;
+    }
+
+    public Account() {
     }
 }

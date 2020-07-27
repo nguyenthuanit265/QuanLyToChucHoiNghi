@@ -29,7 +29,7 @@ public class Conference {
     @Column(name = "id_location")
     private int idLocation;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_location",
             insertable = false, updatable = false)
     private Location location;

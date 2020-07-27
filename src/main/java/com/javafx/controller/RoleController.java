@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class RoleController {
 
     RoleRepository roleRepository = new RoleRepositoryImpl();
 
-    public void findAll(TableView<Object> tableViews) {
+    public void processRole(TableView<Object> tableViews) {
         tableViews.getColumns().clear();
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = roleRepository.findAllActive();
         for (Role role : roles) {
             System.out.println(role.toString());
         }
@@ -53,10 +54,15 @@ public class RoleController {
             private final HBox pane = new HBox(deleteButton, editButton);
 
             {
-                editButton.setStyle("-fx-background-color: #74d4c0; -fx-text-fill: white");
+                editButton.setStyle("-fx-background-color: #74d4c0; -fx-text-fill: white;-fx-cursor: hand;");
+                deleteButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white;-fx-cursor: hand;");
 
+                editButton.setMaxWidth(Double.MAX_VALUE);
+                deleteButton.setMaxWidth(Double.MAX_VALUE);
 
-                deleteButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white");
+                HBox.setHgrow(editButton, Priority.ALWAYS);
+                HBox.setHgrow(deleteButton, Priority.ALWAYS);
+                pane.setSpacing(10);
 
 
                 deleteButton.setOnAction(event -> {

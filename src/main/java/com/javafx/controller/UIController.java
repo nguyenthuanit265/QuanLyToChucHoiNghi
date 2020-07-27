@@ -12,16 +12,19 @@ import com.javafx.repository.LocationRepository;
 import com.javafx.repository.impl.BookRepositoryImpl;
 import com.javafx.repository.impl.ConferenceRepositoryImpl;
 import com.javafx.repository.impl.LocationRepositoryImpl;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,6 +47,10 @@ public class UIController {
     @FXML
     private TableView<Object> tableViews;
     private ObservableList<Book> listBooks;
+
+
+    @FXML
+    Button btnSignUp;
 
 
     ConferenceRepository conferenceRepository = new ConferenceRepositoryImpl();
@@ -83,22 +90,23 @@ public class UIController {
 //    }
 
     public void findAllRole(ActionEvent actionEvent) throws IOException {
-
 //        tableViews = new TableView<>();
         RoleController roleController = new RoleController();
-        roleController.findAll(tableViews);
+        roleController.processRole(tableViews);
     }
 
 
     public void findAllConference(ActionEvent actionEvent) {
-        List<Conference> cons = conferenceRepository.findAll();
-        for (Conference conference : cons) {
-            System.out.println(conference.toString());
-        }
+//        List<Conference> cons = conferenceRepository.findAllActive();
+//        for (Conference conference : cons) {
+//            System.out.println(conference.toString());
+//        }
+        ConferenceController conferenceController = new ConferenceController();
+        conferenceController.processConference(tableViews);
     }
 
     public void findAllLocation(ActionEvent actionEvent) {
-        List<Location> locations = locationRepository.findAll();
+        List<Location> locations = locationRepository.findAllActive();
         for (Location location : locations) {
             System.out.println(location.toString());
         }
@@ -238,7 +246,15 @@ public class UIController {
     }
 
     public void findAllAccount(ActionEvent actionEvent) {
-        AccountController userController = new AccountController();
-        userController.findAll(tableViews);
+        AccountController accountController = new AccountController();
+
+        accountController.ProcessAccount(tableViews);
+    }
+
+    public void SignUp(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/sign_up.fxml"));
+        Stage stage = (Stage) btnSignUp.getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
     }
 }
