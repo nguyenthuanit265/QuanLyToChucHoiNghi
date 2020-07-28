@@ -3,7 +3,8 @@ package com.javafx.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,22 +24,32 @@ public class Conference {
     private String descriptionDetail;
     private String image;
 
+    @Basic
     @Column(name = "time_start")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timeStartEvent;
+
+    @Basic
+    @Column(name = "time_end")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeEndEvent;
+
 
     @Column(name = "id_location")
     private int idLocation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "id_location",
             insertable = false, updatable = false)
     private Location location;
 
 
-    @OneToMany(mappedBy = "conference",
-            fetch = FetchType.LAZY)
-    private List<Account> accounts;
+//    @OneToMany(mappedBy = "conference",
+//            fetch = FetchType.EAGER)
+//    private List<Account> accounts;
 
+    @OneToMany(mappedBy = "conference", fetch = FetchType.EAGER)
+    List<Accounts_Conferences> registrations;
 
     @Column(name = "is_delete")
     private boolean isDelete;

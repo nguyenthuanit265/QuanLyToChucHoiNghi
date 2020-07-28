@@ -9,11 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -34,13 +32,16 @@ public class AccountController {
 
 
         tableViews.getColumns().clear();
+        tableViews.getItems().clear();
+
+
         List<Account> accounts = accountRepository.findAllActive();
 //        tableViews.setFixedCellSize(25);
 //        tableViews.prefHeightProperty().bind(Bindings.size(tableViews.getItems()).multiply(tableViews.getFixedCellSize()).add(30));
 
-        for (Account role : accounts) {
-            System.out.println(role.toString());
-        }
+//        for (Account role : accounts) {
+//            System.out.println(role.toString());
+//        }
         final ObservableList<Object> data = FXCollections.observableArrayList(accounts);
 
         TableColumn numberCol = new TableColumn("#");
@@ -135,9 +136,14 @@ public class AccountController {
                     System.out.println(getPatient.getId() + "   " + getPatient.getEmail());
                     Account account = accountRepository.findById(getPatient.getId());
 
-                    if (BCrypt.checkpw("123456", account.getPassword()))
+
+                    String hashed = BCrypt.hashpw("123456", BCrypt.gensalt());
+                    account.setPassword(hashed);
+                    accountRepository.save(account);
+                    if (BCrypt.checkpw("123456", account.getPassword())) {
                         System.out.println("It matches");
-                    else
+
+                    } else
                         System.out.println("It does not match");
 
 
@@ -162,5 +168,24 @@ public class AccountController {
 
         tableViews.getColumns().add(actionCol);
         tableViews.setItems(data);
+
+
+        tableViews.setRowFactory(tv -> {
+            TableRow row = new TableRow<Account>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2) {
+
+                    Account clickedRow = (Account) row.getItem();
+                    printRow(clickedRow);
+                }
+            });
+            return row;
+        });
+
+    }
+
+    private void printRow(Account item) {
+        System.out.println(item.toString());
     }
 }

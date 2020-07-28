@@ -61,9 +61,10 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
 
     public T findById(K id) {
 //        Session session = sessionFactory.getCurrentSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Transaction trans = session.beginTransaction();
         try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction trans = session.beginTransaction();
+
             // Truy vấn dữ liệu
             T t = session.find(clazz, id);
             trans.commit();
@@ -72,6 +73,8 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
 
         } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+
         }
 
         return null;
@@ -80,35 +83,41 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
     public List<T> findByIdActive(K id) {
 //        Session session = sessionFactory.getCurrentSession();
         List<T> objects = null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction trans = session.beginTransaction();
         try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction trans = session.beginTransaction();
+
             // Truy vấn dữ liệu
 //            T t = session.find(clazz, id);
             Query query = session.createQuery("from " + clazz.getName() + " where is_delete=false and id =" + id);
             objects = query.list();
+//            objects = (List<T>) session.createQuery("SELECT a FROM " + clazz.getName() + " a where a.is_delete = false", clazz).getResultList();
             trans.commit();
 
             return objects;
 
         } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
         }
 
         return objects;
     }
 
     public void save(T entity) {
-//        Session session = sessionFactory.getCurrentSession();
-//        Transaction trans = session.beginTransaction();
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Transaction trans = session.beginTransaction();
+
         try {
+
             // Truy vấn dữ liệu
             session.saveOrUpdate(entity);
             trans.commit();
         } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
         }
     }
 
@@ -128,15 +137,22 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
 
     public List<T> findAllActive() {
         List<T> objects = null;
+
         try {
-            Session session = HibernateUtil.getSessionFactory().openSession();
+            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
             Transaction trans = session.beginTransaction();
-            Query query = session.createQuery("from " + clazz.getName() + " where is_delete=false");
-            objects = query.list();
+//            Query query = session.createQuery("from " + clazz.getName() + " where is_delete=false");
+//            objects = query.list();
+            objects = (List<T>) session.createQuery("SELECT a FROM " + clazz.getName() + " a where a.isDelete = false", clazz).getResultList();
+
             trans.commit();
+
             return objects;
         } catch (HibernateException e) {
             e.printStackTrace();
+        } finally {
+
+//            session.close();
         }
         return objects;
     }

@@ -1,8 +1,6 @@
 package com.javafx;
 
-import com.javafx.config.HibernateConfig;
 
-import com.javafx.controller.MainController;
 import com.javafx.controller.UIController;
 import com.javafx.entity.Role;
 import com.javafx.repository.RoleRepository;
@@ -10,11 +8,14 @@ import com.javafx.repository.TestRepository;
 import com.javafx.repository.impl.RoleRepositoryImpl;
 import com.javafx.repository.impl.TestRepositoryImpl;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,12 +32,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
+
 import java.util.List;
 
-
-//@Configuration
-//@ComponentScan("com")
 @Configuration
 @ComponentScan(basePackages = {"com"})
 public class Main extends Application {
@@ -49,9 +48,6 @@ public class Main extends Application {
 
     @FXML
     Button btnConference;
-
-//    @Autowired
-//    UIController controller;
 
     @Override
     public void init() throws Exception {
@@ -80,10 +76,9 @@ public class Main extends Application {
         root = fxmlLoader.load();
 
         primaryStage.setScene(new Scene(root));
-        //set stage borderless
-        primaryStage.initStyle(StageStyle.UNDECORATED);
 
-        //drag it here
+//        primaryStage.initStyle(StageStyle.UNDECORATED);
+
         root.setOnMousePressed(event -> {
             x = event.getSceneX();
             y = event.getSceneY();
@@ -108,13 +103,6 @@ public class Main extends Application {
 //        this.stage = primaryStage;
 //        stage.show();
 //    }
-
-
-    @Override
-    public void stop() throws Exception {
-        springContext.stop();
-    }
-
 
     public static void main(String[] args) {
         launch(args);

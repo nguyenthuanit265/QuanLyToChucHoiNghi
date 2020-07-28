@@ -24,7 +24,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,7 +40,7 @@ public class UIController {
 
     @FXML
     private BorderPane mainBorderPane;
-
+    private double x, y;
     private double xOffset = 0;
     private double yOffset = 0;
     @FXML
@@ -91,6 +93,7 @@ public class UIController {
 
     public void findAllRole(ActionEvent actionEvent) throws IOException {
 //        tableViews = new TableView<>();
+        System.out.println(actionEvent);
         RoleController roleController = new RoleController();
         roleController.processRole(tableViews);
     }
@@ -101,58 +104,18 @@ public class UIController {
 //        for (Conference conference : cons) {
 //            System.out.println(conference.toString());
 //        }
+//        tableViews = new TableView<Conference>();
         ConferenceController conferenceController = new ConferenceController();
-        conferenceController.processConference(tableViews);
+        conferenceController.processConference((TableView<Object>) tableViews);
     }
 
     public void findAllLocation(ActionEvent actionEvent) {
-        List<Location> locations = locationRepository.findAllActive();
-        for (Location location : locations) {
-            System.out.println(location.toString());
-        }
-    }
-
-    public void populateTableViewBooks() {
-        //txtfldSearchBook.setText(Double.toString(btnAddBook.getHeight()));
-        final ObservableList<Object> data =
-                FXCollections.observableArrayList(
-                        new Person("Jacob", "Smith", "jacob.smith@example.com"),
-                        new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-                        new Person("Ethan", "Williams", "ethan.williams@example.com"),
-                        new Person("Emma", "Jones", "emma.jones@example.com"),
-                        new Person("Michael", "Brown", "michael.brown@example.com")
-                );
-
-
-        if (listBooks != null && listBooks.size() != 0) {
-            listBooks.removeAll();
-        }
-
-        List<Book> books = bookRepository.findAll();
-        listBooks = FXCollections.observableList(books);
-
-
-        TableColumn firstNameCol = new TableColumn("First Name");
-        firstNameCol.setMinWidth(100);
-        firstNameCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("firstName"));
-
-        TableColumn lastNameCol = new TableColumn("Last Name");
-        lastNameCol.setMinWidth(100);
-        lastNameCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("lastName"));
-
-        TableColumn emailCol = new TableColumn("Email");
-        emailCol.setMinWidth(200);
-        emailCol.setCellValueFactory(
-                new PropertyValueFactory<Person, String>("email"));
-
-        tableViews.setItems(data);
-        tableViews.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-
-
-//        tableViews.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
-//        tableViews.setItems(listBooks);
+//        List<Location> locations = locationRepository.findAllActive();
+//        for (Location location : locations) {
+//            System.out.println(location.toString());
+//        }
+        LocationController locationController = new LocationController();
+        locationController.processLocation(tableViews);
     }
 
 
@@ -174,7 +137,7 @@ public class UIController {
 //            bookRepository.save(book);
 //        }
 
-        populateTableViewBooks();
+//        populateTableViewBooks();
     }
 
 
@@ -198,12 +161,12 @@ public class UIController {
 //        if (result.isPresent() && result.get() == ButtonType.OK) {
 //            bookRepository.deleteAll(itemsDelete);
 //        }
-        populateTableViewBooks();
+//        populateTableViewBooks();
     }
 
-    public void refreshBookList(ActionEvent actionEvent) {
-        populateTableViewBooks();
-    }
+//    public void refreshBookList(ActionEvent actionEvent) {
+//        populateTableViewBooks();
+//    }
 
     public void clickMenuItemExit(ActionEvent actionEvent) {
 //        Stage mainStage = (Stage) mainBorderPane.getScene().getWindow();
@@ -232,7 +195,7 @@ public class UIController {
 
 //        bookRepository.saveAndFlush(b);
 
-        populateTableViewBooks();
+//        populateTableViewBooks();
     }
 
     public void showAboutDialog(ActionEvent actionEvent) {
@@ -246,15 +209,38 @@ public class UIController {
     }
 
     public void findAllAccount(ActionEvent actionEvent) {
+//        tableViews = new TableView<Account>();
         AccountController accountController = new AccountController();
 
         accountController.ProcessAccount(tableViews);
     }
 
-    public void SignUp(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/sign_up.fxml"));
-        Stage stage = (Stage) btnSignUp.getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+    public void SignUp() throws IOException {
+//        Parent root = FXMLLoader.load(getClass().getResource("/sign_up.fxml"));
+//        Stage stage = (Stage) btnSignUp.getScene().getWindow();
+//        Scene scene = new Scene(root);
+//        stage.setScene(scene);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sign_up.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("Sign Up");
+        stage.setScene(new Scene(root1));
+
+        root1.setOnMousePressed(event -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+        root1.setOnMouseDragged(event -> {
+
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+
+        });
+
+        stage.show();
+
     }
 }

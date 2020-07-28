@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 @Table
 @Entity(name = "accounts")
@@ -32,19 +33,23 @@ public class Account implements Serializable {
     @NotBlank(message = "Vui lòng chọn loại người dùng!")
     private int roleId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "role_id",
             insertable = false, updatable = false)
     private Role role;
 
 
-    @Column(name = "conference_id")
-    private int conferenceId;
+//    @Column(name = "conference_id")
+//    private int conferenceId;
+//
+//    @ManyToOne()
+//    @JoinColumn(name = "conference_id",
+//            insertable = false, updatable = false)
+//    private Conference conference;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conference_id",
-            insertable = false, updatable = false)
-    private Conference conference;
+    @OneToMany(mappedBy = "account")
+    List<Accounts_Conferences> registrations;
+
 
     @Column(name = "is_delete")
     private boolean isDelete = false;
@@ -61,18 +66,16 @@ public class Account implements Serializable {
                 ", password='" + password + '\'' +
                 ", roleId='" + roleId + '\'' +
                 ", role=" + role +
-                ", conferenceId=" + conferenceId +
-                ", conference=" + conference +
                 ", isDelete=" + isDelete +
                 '}';
     }
 
-    public Account(String email, String username, String password, int roleId, int conferenceId) {
+    public Account(String email, String username, String password, int roleId) {
         this.email = email;
         this.username = username;
         this.password = password;
         this.roleId = roleId;
-        this.conferenceId = conferenceId;
+//        this.conferenceId = conferenceId;
     }
 
     public Account() {
