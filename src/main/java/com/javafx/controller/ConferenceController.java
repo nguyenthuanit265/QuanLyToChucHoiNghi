@@ -11,19 +11,36 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class ConferenceController {
+public class ConferenceController implements Initializable {
 
+    @FXML
+    TextField txtNameConference;
+
+    @FXML
+    TextField txtDescriptionSummary;
+
+    private double x, y;
     private ConferenceRepository conferenceRepository = new ConferenceRepositoryImpl();
 
     public void processConference(TableView<Object> tableViews) {
@@ -180,7 +197,11 @@ public class ConferenceController {
                         && event.getClickCount() == 2) {
 
                     Conference clickedRow = (Conference) row.getItem();
-                    printRow(clickedRow);
+                    try {
+                        printRow(clickedRow);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             return row;
@@ -188,7 +209,42 @@ public class ConferenceController {
 
     }
 
-    private void printRow(Conference item) {
+
+    private void printRow(Conference item) throws IOException {
         System.out.println(item.toString());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/conference_detail.fxml"));
+        Parent root1 = (Parent) fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle("Thông tin chi tiết hội nghị");
+        stage.setScene(new Scene(root1));
+
+        root1.setOnMousePressed(event -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+        root1.setOnMouseDragged(event -> {
+
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+
+        });
+
+        txtNameConference = (TextField) root1.lookup("#txtNameConference");
+        txtNameConference.setText(item.getName());
+
+        txtDescriptionSummary = (TextField) root1.lookup("#txtDescriptionSummary");
+        txtDescriptionSummary.setText(item.getDescriptionSummary());
+
+        stage.show();
+
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        txtNameConference.setText("");
+        txtDescriptionSummary.setText("");
     }
 }

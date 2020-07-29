@@ -3,12 +3,10 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="800.0" prefWidth="1500.0" styleClass="parent" stylesheets="@stylesheet.css"
             xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
@@ -46,7 +44,7 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Button fx:id="Home" alignment="BASELINE_LEFT" prefWidth="300.0"
+                        <Button fx:id="Home" alignment="BASELINE_LEFT" onAction="#loadHomePage" prefWidth="300.0"
                                 style="-fx-background-color: #333645;" text="Dashboard" textFill="#7c8184">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
@@ -91,7 +89,7 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Button alignment="BASELINE_LEFT" onAction="#findAllAccount" prefWidth="300.0"
+                        <Button fx:id="accounts" alignment="BASELINE_LEFT" onAction="#findAllAccount" prefWidth="300.0"
                                 style="-fx-background-color: #333645;" text="Account" textFill="#7c8184"
                                 underline="false">
                             <font>
@@ -113,7 +111,7 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Button fx:id="btnConference" alignment="BASELINE_LEFT" onAction="#findAllConference"
+                        <Button fx:id="conferences" alignment="BASELINE_LEFT" onAction="#findAllConference"
                                 prefWidth="300.0" style="-fx-background-color: #333645;" text="Conference"
                                 textFill="#7c8184" underline="false">
                             <font>
@@ -135,7 +133,8 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Button fx:id="location" alignment="BASELINE_LEFT" onAction="#findAllLocation" prefWidth="300.0"
+                        <Button fx:id="locations" alignment="BASELINE_LEFT" onAction="#findAllLocation"
+                                prefWidth="300.0"
                                 style="-fx-background-color: #333645;" text="Location" textFill="#7c8184"
                                 underline="false">
                             <font>
@@ -191,8 +190,8 @@
         </VBox>
         <VBox layoutX="300.0" prefHeight="800.0" prefWidth="1200.0">
             <children>
-                <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                      prefHeight="75.0" prefWidth="724.0" style="-fx-background-color: #fff;">
+                <Pane fx:id="paneLayoutHome" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                      minWidth="-Infinity" prefHeight="75.0" prefWidth="724.0" style="-fx-background-color: #fff;">
                     <effect>
                         <DropShadow blurType="ONE_PASS_BOX" color="#e8e4e4" height="10.0" radius="4.5" width="10.0"/>
                     </effect>
@@ -214,12 +213,13 @@
                 </Pane>
 
 
-                <!--                <ImageView fx:id="chartImage" fitHeight="250.0" fitWidth="1200.0" pickOnBounds="true" smooth="false">-->
+                <!--                <ImageView fx:id="chartImage" fitHeight="250.0" fitWidth="1200.0" pickOnBounds="true" smooth="false"-->
+                <!--                           visible="false">-->
                 <!--                    <image>-->
                 <!--                        <Image url="@./images/line-chart.jpg"/>-->
                 <!--                    </image>-->
                 <!--                </ImageView>-->
-                <!--                <HBox alignment="CENTER">-->
+                <!--                <HBox fx:id="homeContent" alignment="CENTER" visible="false">-->
                 <!--                    <children>-->
                 <!--                        <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"-->
                 <!--                              minHeight="-Infinity" minWidth="-Infinity" prefHeight="275.0" prefWidth="230.0"-->
@@ -308,61 +308,94 @@
                 <!--                    </children>-->
                 <!--                </HBox>-->
 
+                <Label fx:id="lblTitle" text="Title">
+                    <font>
+                        <Font size="27.0"/>
+                    </font>
+                </Label>
+                <HBox alignment="BASELINE_CENTER">
+                    <RadioButton fx:id="radioButtonTableView" text="TableView">
+                        <HBox.margin>
+                            <Insets right="3.0"/>
+                        </HBox.margin>
+                        <toggleGroup>
+                            <ToggleGroup fx:id="group"/>
+                        </toggleGroup>
+                    </RadioButton>
+                    <RadioButton fx:id="radioButtonTreeView" text="TreeView">
+                        <HBox.margin>
+                            <Insets right="30.0"/>
+                            <Insets bottom="10.0"/>
+
+                        </HBox.margin>
+                        <toggleGroup>
+                            <fx:reference source="group"/>
+                        </toggleGroup>
+                    </RadioButton>
+                </HBox>
+                <AnchorPane fx:id="contentBodyAnchorPane" pickOnBounds="true" prefWidth="1200.0"
+                            AnchorPane.topAnchor="10.0">
+
+                    <children>
+                        <TreeView fx:id="treeView" prefHeight="600.0"
+                                  prefWidth="1200.0"/>
+                    </children>
+
+                    <!--                <TableView fx:id="tableViews" editable="true" prefWidth="720.0" AnchorPane.bottomAnchor="10.0"-->
+                    <!--                           AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">-->
+                    <!--                    <columnResizePolicy>-->
+                    <!--                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>-->
+                    <!--                    </columnResizePolicy>-->
+                    <!--                    <columns>-->
+                    <!--                        &lt;!&ndash;                        <TableColumn maxWidth="90" minWidth="80" text="Mã Sách">&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="id"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_name" onEditCommit="#onEditCommit" text="Tên Sách">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="name"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_category" onEditCommit="#onEditCommit" text="Thể loại">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="category"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_author" onEditCommit="#onEditCommit" text="Tác giả">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="author"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_publisher" onEditCommit="#onEditCommit" text="NXB">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="publisher"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_yearpublished" onEditCommit="#onEditCommit" text="Năm XB">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="yearPublished"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        <TableColumn fx:id="col_isbn" onEditCommit="#onEditCommit" text="ISBN">&ndash;&gt;-->
+
+                    <!--                        &lt;!&ndash;                            <cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                <PropertyValueFactory property="ISBN"/>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                            </cellValueFactory>&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                        </TableColumn>&ndash;&gt;-->
+                    <!--                    </columns>-->
+
+                    <!--                </TableView>-->
+
+
+                </AnchorPane>
             </children>
-            <AnchorPane fx:id="anchorPane" prefWidth="724.0" AnchorPane.topAnchor="10.0">
-                <TableView fx:id="tableViews" editable="true" prefWidth="720.0" AnchorPane.bottomAnchor="10.0"
-                           AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                    <columns>
-                        <!--                        <TableColumn maxWidth="90" minWidth="80" text="Mã Sách">-->
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="id"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_name" onEditCommit="#onEditCommit" text="Tên Sách">-->
 
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="name"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_category" onEditCommit="#onEditCommit" text="Thể loại">-->
-
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="category"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_author" onEditCommit="#onEditCommit" text="Tác giả">-->
-
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="author"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_publisher" onEditCommit="#onEditCommit" text="NXB">-->
-
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="publisher"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_yearpublished" onEditCommit="#onEditCommit" text="Năm XB">-->
-
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="yearPublished"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                        <!--                        <TableColumn fx:id="col_isbn" onEditCommit="#onEditCommit" text="ISBN">-->
-
-                        <!--                            <cellValueFactory>-->
-                        <!--                                <PropertyValueFactory property="ISBN"/>-->
-                        <!--                            </cellValueFactory>-->
-                        <!--                        </TableColumn>-->
-                    </columns>
-
-                </TableView>
-
-
-            </AnchorPane>
         </VBox>
     </children>
 </AnchorPane>

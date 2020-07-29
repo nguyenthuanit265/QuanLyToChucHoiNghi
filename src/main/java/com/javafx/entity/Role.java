@@ -27,7 +27,7 @@ public class Role implements Serializable {
     private String description;
 
     @OneToMany(mappedBy = "role",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     private List<Account> accounts;
 
     @Column(name = "is_delete")
@@ -55,6 +55,7 @@ public class Role implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", accounts=" + accounts.toString() +
                 '}';
     }
 }

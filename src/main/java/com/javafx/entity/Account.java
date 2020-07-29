@@ -63,10 +63,8 @@ public class Account implements Serializable {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", roleId='" + roleId + '\'' +
-                ", role=" + role +
-                ", isDelete=" + isDelete +
+
+
                 '}';
     }
 

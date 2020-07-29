@@ -1,36 +1,36 @@
 package com.javafx.controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 //import com.javafx.Launch;
 import com.javafx.entity.*;
-import com.javafx.repository.BookRepository;
-import com.javafx.repository.ConferenceRepository;
-import com.javafx.repository.LocationRepository;
-import com.javafx.repository.impl.BookRepositoryImpl;
-import com.javafx.repository.impl.ConferenceRepositoryImpl;
-import com.javafx.repository.impl.LocationRepositoryImpl;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+
 @Component
-public class UIController {
+public class UIController implements Initializable {
     public TableColumn<Book, String> col_name;
     public TableColumn<Book, String> col_category;
     public TableColumn<Book, String> col_author;
@@ -43,23 +43,116 @@ public class UIController {
     private double x, y;
     private double xOffset = 0;
     private double yOffset = 0;
-    @FXML
-    private AnchorPane parent;
 
     @FXML
+    private ImageView chartImage;
+
+    @FXML
+    private HBox homeContent;
+
+    @FXML
+    private AnchorPane contentBodyAnchorPane;
+
+    @FXML
+    Pane paneLayoutHome;
+
     private TableView<Object> tableViews;
+
+//    private TreeItem<Object> rootItems;
+
+    private TreeView<Object> treeViews;
+
     private ObservableList<Book> listBooks;
 
 
     @FXML
     Button btnSignUp;
 
+    @FXML
+    Label lblTitle;
 
-    ConferenceRepository conferenceRepository = new ConferenceRepositoryImpl();
+    @FXML
+    ToggleGroup group;
 
-    LocationRepository locationRepository = new LocationRepositoryImpl();
+    @FXML
+    RadioButton radioButtonTableView;
 
-    BookRepository bookRepository = new BookRepositoryImpl();
+    @FXML
+    RadioButton radioButtonTreeView;
+
+    ActionEvent actionEvent;
+
+    int chooseView = 1;
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("init");
+//        group = new ToggleGroup();
+        radioButtonTableView.setToggleGroup(group);
+        radioButtonTreeView.setToggleGroup(group);
+
+        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @SneakyThrows
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
+
+                // Có lựa chọn
+                if (group.getSelectedToggle() != null) {
+                    RadioButton button = (RadioButton) group.getSelectedToggle();
+                    System.out.println("Button: " + button.getText());
+                    if (button.getText().equals("TableView")) {
+                        chooseView = 0;
+                    } else {
+                        chooseView = 1;
+                    }
+                    loadBody();
+
+                }
+            }
+        });
+
+    }
+
+    public void loadBody() throws IOException {
+        final Node source = (Node) actionEvent.getSource();
+        String id = source.getId();
+
+        switch (id) {
+            case "roles":
+                findAllRole(actionEvent);
+                break;
+            case "accounts":
+                findAllAccount(actionEvent);
+                break;
+            case "locations":
+                findAllLocation(actionEvent);
+                break;
+            case "conferences":
+                findAllConference(actionEvent);
+                break;
+            default:
+                loadHomePage(actionEvent);
+
+        }
+
+
+    }
+
+    public void fitTableView() {
+        tableViews = new TableView<>();
+        tableViews.setPrefWidth(1200.0);
+//        tableViews.setPrefHeight(600.0);
+        tableViews.setEditable(true);
+        tableViews.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        contentBodyAnchorPane.getChildren().add(tableViews);
+    }
+
+    public void fitTreeView() {
+        treeViews = new TreeView<>();
+        treeViews.setPrefWidth(1200.0);
+        contentBodyAnchorPane.getChildren().add(treeViews);
+    }
 //    @Override
 //    public void initialize(URL url, ResourceBundle rb) {
 //        // TODO
@@ -92,28 +185,49 @@ public class UIController {
 //    }
 
     public void findAllRole(ActionEvent actionEvent) throws IOException {
-//        tableViews = new TableView<>();
-        System.out.println(actionEvent);
+        lblTitle.setText("Danh sách quyền truy cập");
+        blockHomePage();
+        this.actionEvent = actionEvent;
+        final Node source = (Node) actionEvent.getSource();
+        String id = source.getId();
+        System.out.println("id event: " + id);
+
         RoleController roleController = new RoleController();
-        roleController.processRole(tableViews);
+
+        if (chooseView == 0) {
+            fitTableView();
+            roleController.processRole(tableViews);
+        } else {
+            fitTreeView();
+            roleController.processRole(treeViews);
+        }
+//
+
     }
 
 
     public void findAllConference(ActionEvent actionEvent) {
-//        List<Conference> cons = conferenceRepository.findAllActive();
-//        for (Conference conference : cons) {
-//            System.out.println(conference.toString());
-//        }
-//        tableViews = new TableView<Conference>();
+        lblTitle.setText("Danh sách hội nghị");
+        blockHomePage();
+        this.actionEvent = actionEvent;
+        final Node source = (Node) actionEvent.getSource();
+        String id = source.getId();
+        System.out.println("id event: " + id);
+
+        fitTableView();
         ConferenceController conferenceController = new ConferenceController();
         conferenceController.processConference((TableView<Object>) tableViews);
     }
 
     public void findAllLocation(ActionEvent actionEvent) {
-//        List<Location> locations = locationRepository.findAllActive();
-//        for (Location location : locations) {
-//            System.out.println(location.toString());
-//        }
+        lblTitle.setText("Danh sách địa điểm hội nghị");
+        blockHomePage();
+        this.actionEvent = actionEvent;
+        final Node source = (Node) actionEvent.getSource();
+        String id = source.getId();
+        System.out.println("id event: " + id);
+
+        fitTableView();
         LocationController locationController = new LocationController();
         locationController.processLocation(tableViews);
     }
@@ -209,18 +323,27 @@ public class UIController {
     }
 
     public void findAllAccount(ActionEvent actionEvent) {
-//        tableViews = new TableView<Account>();
+        lblTitle.setText("Danh sách tài khoản");
+        blockHomePage();
+        this.actionEvent = actionEvent;
+        final Node source = (Node) actionEvent.getSource();
+        String id = source.getId();
+        System.out.println("id event: " + id);
+
         AccountController accountController = new AccountController();
 
-        accountController.ProcessAccount(tableViews);
+
+        if (chooseView == 0) {
+            fitTableView();
+            accountController.processAccount(tableViews);
+        } else {
+            fitTreeView();
+            accountController.processAccount(treeViews);
+        }
+
     }
 
     public void SignUp() throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("/sign_up.fxml"));
-//        Stage stage = (Stage) btnSignUp.getScene().getWindow();
-//        Scene scene = new Scene(root);
-//        stage.setScene(scene);
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sign_up.fxml"));
         Parent root1 = (Parent) fxmlLoader.load();
         Stage stage = new Stage();
@@ -241,6 +364,20 @@ public class UIController {
         });
 
         stage.show();
+
+    }
+
+    public void loadHomePage(ActionEvent actionEvent) {
+        lblTitle.setText("Trang chủ");
+        findAllConference(actionEvent);
+
+    }
+
+    public void blockHomePage() {
+
+//        chartImage.setVisible(false);
+//        homeContent.setVisible(false);
+//        paneLayoutHome.getChildren().clear();
 
     }
 }

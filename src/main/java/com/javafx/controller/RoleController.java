@@ -1,23 +1,52 @@
 package com.javafx.controller;
 
+import com.javafx.entity.BookCategory;
 import com.javafx.entity.Role;
 import com.javafx.repository.RoleRepository;
 import com.javafx.repository.impl.RoleRepositoryImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import sun.reflect.generics.tree.Tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoleController {
 
     RoleRepository roleRepository = new RoleRepositoryImpl();
+
+    public void processRole(TreeView<Object> treeViews) {
+        List<Role> roles = roleRepository.findAllActive();
+        BookCategory catRoot = new BookCategory("ROOT", "Root");
+        // Phần tử gốc
+        TreeItem rootItems = new TreeItem();
+        rootItems = new TreeItem<>(catRoot);
+        rootItems.setExpanded(true);
+
+        TreeItem itemId = new TreeItem();
+        for (int i = 0; i < roles.size(); i++) {
+            System.out.println("size: " + roles.size());
+            itemId.setValue(roles.get(i).getId());
+            TreeItem toStringRole = new TreeItem(roles.get(i).toString());
+
+            itemId.getChildren().addAll(toStringRole);
+
+            System.out.println(itemId);
+            rootItems.getChildren().addAll(itemId);
+            itemId = new TreeItem();
+        }
+
+
+        treeViews.setRoot(rootItems);
+
+        // Ẩn phần tử gốc.
+        treeViews.setShowRoot(false);
+
+    }
 
     public void processRole(TableView<Object> tableViews) {
         tableViews.getColumns().clear();

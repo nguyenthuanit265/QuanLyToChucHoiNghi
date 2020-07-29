@@ -1,6 +1,7 @@
 package com.javafx.controller;
 
 import com.javafx.entity.Account;
+import com.javafx.entity.BookCategory;
 import com.javafx.entity.Role;
 import com.javafx.repository.AccountRepository;
 import com.javafx.repository.impl.AccountRepositoryImpl;
@@ -28,7 +29,37 @@ public class AccountController {
 //        accountRepository.save(new Account("test@gmai.com", "test", hashed, 1, 1));
     }
 
-    public void ProcessAccount(TableView<Object> tableViews) {
+
+    public void processAccount(TreeView<Object> treeViews) {
+        List<Account> accounts = accountRepository.findAllActive();
+        BookCategory catRoot = new BookCategory("ROOT", "Root");
+        // Phần tử gốc
+        TreeItem rootItems = new TreeItem();
+        rootItems = new TreeItem<>(catRoot);
+        rootItems.setExpanded(true);
+
+        TreeItem itemId = new TreeItem();
+        for (int i = 0; i < accounts.size(); i++) {
+            System.out.println("size: " + accounts.size());
+            itemId.setValue(accounts.get(i).getId());
+            TreeItem toStringAccount = new TreeItem(accounts.get(i).toString());
+
+            itemId.getChildren().addAll(toStringAccount);
+
+            System.out.println(itemId);
+            rootItems.getChildren().addAll(itemId);
+            itemId = new TreeItem();
+        }
+
+
+        treeViews.setRoot(rootItems);
+
+        // Ẩn phần tử gốc.
+        treeViews.setShowRoot(false);
+
+    }
+
+    public void processAccount(TableView<Object> tableViews) {
 
 
         tableViews.getColumns().clear();
@@ -128,7 +159,7 @@ public class AccountController {
                     System.out.println(getPatient.getId() + "   " + getPatient.getEmail());
                     getPatient.setDelete(true);
                     accountRepository.save(getPatient);
-                    ProcessAccount(tableViews);
+                    processAccount(tableViews);
                 });
 
                 editButton.setOnAction(event -> {
@@ -186,6 +217,10 @@ public class AccountController {
     }
 
     private void printRow(Account item) {
+
         System.out.println(item.toString());
+
+
+
     }
 }
