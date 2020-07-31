@@ -62,9 +62,7 @@ public class Account implements Serializable {
         return "Account{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-
-
+                ", username='" + username + '\'' + "\n" +
                 '}';
     }
 

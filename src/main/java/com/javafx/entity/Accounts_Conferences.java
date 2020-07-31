@@ -21,6 +21,8 @@ public class Accounts_Conferences {
     @JoinColumn(name = "conference_id")
     Conference conference;
 
+    @Column(name = "is_delete")
+    private boolean isDelete = false;
 
 
 }

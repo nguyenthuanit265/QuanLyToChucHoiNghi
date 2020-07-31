@@ -2,42 +2,25 @@ package com.javafx;
 
 
 import com.javafx.controller.UIController;
-import com.javafx.entity.Role;
-import com.javafx.repository.RoleRepository;
-import com.javafx.repository.TestRepository;
-import com.javafx.repository.impl.RoleRepositoryImpl;
-import com.javafx.repository.impl.TestRepositoryImpl;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import javafx.event.ActionEvent;
-
-import java.util.List;
+import java.util.prefs.Preferences;
 
 @Configuration
 @ComponentScan(basePackages = {"com"})
+@SpringBootApplication
 public class Main extends Application {
     public static Stage stage = null;
     private double x, y;
@@ -59,13 +42,20 @@ public class Main extends Application {
                         AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE,
                         true
                 );
-        springContext.getBean(RoleRepository.class);
+//        springContext.getBean(RoleRepository.class);
+        Preferences userPreferences = Preferences.userRoot();
+        System.out.println("init method Main : " + userPreferences.get("email", ""));
+        userPreferences.clear();
+        System.out.println("clear =>>>>>>>>>>>> ");
+        System.out.println("init method Main : " + userPreferences.get("email", ""));
 
     }
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println("primaryStage:---------->>>>>>>>>>" + primaryStage);
+
         loadHomeView(primaryStage);
     }
 
@@ -91,8 +81,8 @@ public class Main extends Application {
         });
         primaryStage.show();
 
-//        UIController mainController = fxmlLoader.getController();
-//        mainController.findAllConference();
+        UIController mainController = fxmlLoader.getController();
+        mainController.findAllConference();
     }
 
 //    @Override

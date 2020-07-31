@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 //import com.javafx.Launch;
 import com.javafx.entity.*;
+import com.javafx.session.AccountLoginSession;
+import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -23,7 +26,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -80,15 +82,71 @@ public class UIController implements Initializable {
     @FXML
     RadioButton radioButtonTreeView;
 
+
+    @FXML
+    Label lblEmailLogin;
+
+    @FXML
+    Button btnRefresh;
+
+    @FXML
+    Button btnAccounts;
+
+    @FXML
+    Button btnConferences;
+
+    @FXML
+    Button btnLocations;
+
+    @FXML
+    Button btnRoles;
     ActionEvent actionEvent;
 
     int chooseView = 1;
 
 
+    public void loadNavbar() throws IOException {
+        AccountLoginSession accountLoginSession = new AccountLoginSession();
+        String emailLoggedIn = accountLoginSession.getEmailAccountLogin();
+
+        Authorization();
+        lblEmailLogin.setText(emailLoggedIn);
+    }
+
+
+    public void Authorization() throws IOException {
+        Preferences userPreferences = Preferences.userRoot();
+        String emailLoggedIn = userPreferences.get("email", "");
+        String roleName = userPreferences.get("role", "");
+        if (roleName.equals("ROLE_ADMIN")) {
+            btnAccounts.setVisible(true);
+            btnLocations.setVisible(true);
+            btnRoles.setVisible(true);
+
+        } else if (roleName.length() == 0) {
+            btnAccounts.setVisible(false);
+//            btnAccounts.setText("");
+//            btnAccounts.setPrefWidth(0);
+//            btnAccounts.setPrefHeight(0);
+
+
+            btnLocations.setVisible(false);
+//            btnLocations.setText("");
+//            btnLocations.setPrefWidth(0);
+//            btnLocations.setPrefHeight(0);
+
+            btnRoles.setVisible(false);
+        }
+    }
+
+
+    @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Authorization();
         System.out.println("init");
-//        group = new ToggleGroup();
+
+
         radioButtonTableView.setToggleGroup(group);
         radioButtonTreeView.setToggleGroup(group);
 
@@ -115,8 +173,19 @@ public class UIController implements Initializable {
     }
 
     public void loadBody() throws IOException {
-        final Node source = (Node) actionEvent.getSource();
-        String id = source.getId();
+
+        loadNavbar();
+        Authorization();
+//        Authorization();
+        String id;
+        System.out.println("actionEvent ----->>>>>>>>>>>" + actionEvent);
+        if (actionEvent == null) {
+            id = "conferences";
+        } else {
+            final Node source = (Node) actionEvent.getSource();
+            id = source.getId();
+        }
+
 
         switch (id) {
             case "roles":
@@ -209,14 +278,20 @@ public class UIController implements Initializable {
     public void findAllConference(ActionEvent actionEvent) {
         lblTitle.setText("Danh sách hội nghị");
         blockHomePage();
-        this.actionEvent = actionEvent;
-        final Node source = (Node) actionEvent.getSource();
-        String id = source.getId();
-        System.out.println("id event: " + id);
-
-        fitTableView();
+//        this.actionEvent = actionEvent;
+//        final Node source = (Node) actionEvent.getSource();
+//        String id = source.getId();
+//        System.out.println("id event: " + id);
         ConferenceController conferenceController = new ConferenceController();
-        conferenceController.processConference((TableView<Object>) tableViews);
+
+        if (chooseView == 0) {
+            fitTableView();
+            conferenceController.processConference((TableView<Object>) tableViews);
+        } else {
+            fitTreeView();
+            conferenceController.processConference(treeViews);
+        }
+
     }
 
     public void findAllLocation(ActionEvent actionEvent) {
@@ -343,31 +418,33 @@ public class UIController implements Initializable {
 
     }
 
-    public void SignUp() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sign_up.fxml"));
-        Parent root1 = (Parent) fxmlLoader.load();
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-//        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setTitle("Sign Up");
-        stage.setScene(new Scene(root1));
-
-        root1.setOnMousePressed(event -> {
-            x = event.getSceneX();
-            y = event.getSceneY();
-        });
-        root1.setOnMouseDragged(event -> {
-
-            stage.setX(event.getScreenX() - x);
-            stage.setY(event.getScreenY() - y);
-
-        });
-
-        stage.show();
-
+    public void SignUp() throws Exception {
+        Login_SignUpController login_signUpController = new Login_SignUpController();
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sign_up.fxml"));
+//        Parent root1 = (Parent) fxmlLoader.load();
+//        Stage stage = new Stage();
+//        stage.initModality(Modality.APPLICATION_MODAL);
+////        stage.initStyle(StageStyle.UNDECORATED);
+//        stage.setTitle("Sign Up");
+//        stage.setScene(new Scene(root1));
+//
+//        root1.setOnMousePressed(event -> {
+//            x = event.getSceneX();
+//            y = event.getSceneY();
+//        });
+//        root1.setOnMouseDragged(event -> {
+//
+//            stage.setX(event.getScreenX() - x);
+//            stage.setY(event.getScreenY() - y);
+//
+//        });
+//
+//        stage.show();
+        login_signUpController.start(new Stage());
     }
 
-    public void loadHomePage(ActionEvent actionEvent) {
+    public void loadHomePage(ActionEvent actionEvent) throws IOException {
+        loadNavbar();
         lblTitle.setText("Trang chủ");
         findAllConference(actionEvent);
 
@@ -380,4 +457,46 @@ public class UIController implements Initializable {
 //        paneLayoutHome.getChildren().clear();
 
     }
+
+    public void findAllConference() {
+        lblTitle.setText("Danh sách hội nghị");
+        blockHomePage();
+
+        fitTableView();
+        ConferenceController conferenceController = new ConferenceController();
+        conferenceController.processConference((TableView<Object>) tableViews);
+    }
+
+    @FXML
+    public void Refresh(ActionEvent actionEvent) throws IOException {
+
+        loadBody();
+    }
+
+
+    public void loadHomeView(Stage primaryStage, Parent root) throws IOException {
+        //        Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/admin.fxml"));
+//        fxmlLoader.setControllerFactory(springContext::getBean);
+        root = fxmlLoader.load();
+
+        primaryStage.setScene(new Scene(root));
+
+//        primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        root.setOnMousePressed(event -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+        root.setOnMouseDragged(event -> {
+
+            primaryStage.setX(event.getScreenX() - x);
+            primaryStage.setY(event.getScreenY() - y);
+
+        });
+        primaryStage.show();
+
+        findAllConference();
+    }
+
 }

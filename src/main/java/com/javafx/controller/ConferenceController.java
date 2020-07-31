@@ -1,23 +1,27 @@
 package com.javafx.controller;
 
-import com.javafx.entity.Account;
-import com.javafx.entity.Accounts_Conferences;
-import com.javafx.entity.Conference;
-import com.javafx.entity.Role;
+import com.javafx.entity.*;
+import com.javafx.repository.Accounts_ConferencesRepository;
 import com.javafx.repository.ConferenceRepository;
+import com.javafx.repository.impl.Accounts_ConferencesRepositoryImpl;
 import com.javafx.repository.impl.ConferenceRepositoryImpl;
+import com.javafx.session.AccountLoginSession;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -26,8 +30,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.mindrot.jbcrypt.BCrypt;
 
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,13 +41,73 @@ import java.util.ResourceBundle;
 public class ConferenceController implements Initializable {
 
     @FXML
+    TextField txtIdConference;
+
+    @FXML
     TextField txtNameConference;
 
     @FXML
     TextField txtDescriptionSummary;
 
+    @FXML
+    TextField txtDescriptionDetail;
+
+    @FXML
+    TextArea txtLocation;
+
+    @FXML
+    TextField txtTimeStart;
+
+    @FXML
+    TextField txtTimeEnd;
+
+    @FXML
+    ImageView imgConference;
+
+    @FXML
+    TableView<Object> tableViewListUser;
+
+    @FXML
+    Button btnRegisterConference;
+
+    AccountLoginSession accountLoginSession;
+
+    Accounts_ConferencesRepository accounts_conferencesRepository;
+
+
     private double x, y;
     private ConferenceRepository conferenceRepository = new ConferenceRepositoryImpl();
+
+
+    public void processConference(TreeView<Object> treeViews) {
+        List<Conference> conferences = conferenceRepository.findAllActive();
+        BookCategory catRoot = new BookCategory("ROOT", "Root");
+        // Phần tử gốc
+        TreeItem rootItems = new TreeItem();
+        rootItems = new TreeItem<>(catRoot);
+        rootItems.setExpanded(true);
+
+        TreeItem itemId = new TreeItem();
+        for (int i = 0; i < conferences.size(); i++) {
+            System.out.println("size: " + conferences.size());
+            itemId.setValue(conferences.get(i).getId());
+            TreeItem toStringRole = new TreeItem(conferences.get(i).toString());
+
+            itemId.getChildren().addAll(toStringRole);
+
+            System.out.println(itemId);
+            rootItems.getChildren().addAll(itemId);
+            itemId = new TreeItem();
+        }
+
+
+        treeViews.setRoot(rootItems);
+
+        // Ẩn phần tử gốc.
+        treeViews.setShowRoot(false);
+
+    }
+
 
     public void processConference(TableView<Object> tableViews) {
         tableViews.getColumns().clear();
@@ -122,16 +188,43 @@ public class ConferenceController implements Initializable {
             }
         });
 
-
         tableViews.getColumns().addAll(numberCol, nameCol, summaryCol, timeStartCol, timeEndCol, locationCol);
 
-        TableColumn actionCol = new TableColumn<Role, Void>("Action");
+        accountLoginSession = new AccountLoginSession();
+        String roleNameAccount = accountLoginSession.getRoleAccountLogin();
+        if (roleNameAccount == null) {
+            CustomButtonForUser(tableViews);
+        } else if (roleNameAccount.equals("ROLE_ADMIN")) {
+            CustomButtonForAdmin(tableViews);
+        }
+        tableViews.setItems(data);
+
+        tableViews.setRowFactory(tv -> {
+            TableRow row = new TableRow<Conference>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
+                        && event.getClickCount() == 2) {
+
+                    Conference clickedRow = (Conference) row.getItem();
+                    try {
+                        printRow(clickedRow);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
+
+    }
+
+    public void CustomButtonForAdmin(TableView<Object> tableViews) {
+        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
         actionCol.setMinWidth(150);
 //        actionCol.setCellValueFactory(new PropertyValueFactory<Role, Role>("id"));
         actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
             private final Button editButton = new Button("Edit");
             private final Button deleteButton = new Button("Delete");
-
             private final Button listUserButton = new Button("List User");
 
             private final HBox pane = new HBox(editButton, deleteButton, listUserButton);
@@ -188,25 +281,42 @@ public class ConferenceController implements Initializable {
 
 
         tableViews.getColumns().add(actionCol);
-        tableViews.setItems(data);
+    }
 
-        tableViews.setRowFactory(tv -> {
-            TableRow row = new TableRow<Conference>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
-                        && event.getClickCount() == 2) {
+    public void CustomButtonForUser(TableView<Object> tableViews) {
+        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
+        actionCol.setMinWidth(150);
+//        actionCol.setCellValueFactory(new PropertyValueFactory<Role, Role>("id"));
+        actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
 
-                    Conference clickedRow = (Conference) row.getItem();
-                    try {
-                        printRow(clickedRow);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return row;
+            private final Button listUserButton = new Button("List User");
+
+            private final HBox pane = new HBox(listUserButton);
+
+            {
+                listUserButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white; -fx-cursor: hand;");
+                listUserButton.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(listUserButton, Priority.ALWAYS);
+                pane.setSpacing(10);
+                listUserButton.setOnAction(event -> {
+                    Conference getPatient = getTableView().getItems().get(getIndex());
+                    System.out.println(getPatient.getId() + "   " + getPatient.getLocation());
+                    List<Accounts_Conferences> accounts = getPatient.getRegistrations();
+                    System.out.println(accounts);
+
+
+                });
+
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : pane);
+            }
         });
 
+        tableViews.getColumns().add(actionCol);
     }
 
 
@@ -231,13 +341,145 @@ public class ConferenceController implements Initializable {
 
         });
 
+
+        txtIdConference = (TextField) root1.lookup("#txtIdConference");
+        txtIdConference.setText(String.valueOf(item.getId()));
+
+
         txtNameConference = (TextField) root1.lookup("#txtNameConference");
         txtNameConference.setText(item.getName());
 
         txtDescriptionSummary = (TextField) root1.lookup("#txtDescriptionSummary");
         txtDescriptionSummary.setText(item.getDescriptionSummary());
 
+        txtDescriptionDetail = (TextField) root1.lookup("#txtDescriptionDetail");
+        txtDescriptionDetail.setText(item.getDescriptionDetail());
+
+        txtLocation = (TextArea) root1.lookup("#txtLocation");
+        txtLocation.setText(item.getLocation().getAddress());
+
+        txtTimeStart = (TextField) root1.lookup("#txtTimeStart");
+        txtTimeStart.setText(item.getTimeEndEvent().toString());
+
+
+        txtTimeEnd = (TextField) root1.lookup("#txtTimeEnd");
+        txtTimeEnd.setText(item.getTimeStartEvent().toString());
+
+
+        imgConference = (ImageView) root1.lookup("#imgConference");
+        imgConference.setImage(new Image(item.getImage()));
+
+        showListAccount(tableViewListUser, item, root1);
+
+
         stage.show();
+
+
+    }
+
+    private void showListAccount(TableView tableViewListUser, Conference conference, Parent root1) {
+
+        tableViewListUser = (TableView) root1.lookup("#tableViewListUser");
+        tableViewListUser.setEditable(true);
+        tableViewListUser.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        List<Accounts_Conferences> accounts_conferences = conference.getRegistrations();
+        System.out.println(accounts_conferences);
+        List<Account> accounts = new ArrayList<>();
+
+        for (Accounts_Conferences temp : accounts_conferences) {
+            accounts.add(temp.getAccount());
+        }
+
+        System.out.println(accounts);
+
+        final ObservableList<Object> data = FXCollections.observableArrayList(accounts);
+
+        TableColumn numberCol = new TableColumn("#");
+        numberCol.setMinWidth(20);
+        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Account, Account>, ObservableValue<Account>>() {
+            @Override
+            public ObservableValue<Account> call(TableColumn.CellDataFeatures<Account, Account> p) {
+                return new ReadOnlyObjectWrapper(p.getValue());
+            }
+        });
+
+        numberCol.setCellFactory(new Callback<TableColumn<Account, Account>, TableCell<Account, Account>>() {
+            @Override
+            public TableCell<Account, Account> call(TableColumn<Account, Account> param) {
+                return new TableCell<Account, Account>() {
+                    @Override
+                    protected void updateItem(Account item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (this.getTableRow() != null && item != null) {
+                            setText(this.getTableRow().getIndex() + 1 + "");
+                        } else {
+                            setText("");
+                        }
+                    }
+                };
+            }
+        });
+        numberCol.setSortable(false);
+
+
+        TableColumn idCol = new TableColumn("Id");
+        idCol.setMinWidth(100);
+        idCol.setCellValueFactory(
+                new PropertyValueFactory<Account, Integer>("id"));
+
+        TableColumn usernameCol = new TableColumn("Username");
+        usernameCol.setMinWidth(100);
+        usernameCol.setCellValueFactory(
+                new PropertyValueFactory<Account, String>("username"));
+
+        TableColumn emailCol = new TableColumn("Email");
+        emailCol.setMinWidth(100);
+        emailCol.setCellValueFactory(
+                new PropertyValueFactory<Account, String>("email"));
+
+
+        tableViewListUser.getColumns().addAll(numberCol, idCol, usernameCol, emailCol);
+
+        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
+        actionCol.setMinWidth(100);
+
+        actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
+
+            private final Button cancelButton = new Button("Cancel");
+
+            private final HBox pane = new HBox(cancelButton);
+
+            {
+
+                cancelButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white;-fx-cursor: hand;");
+
+
+                cancelButton.setMaxWidth(Double.MAX_VALUE);
+
+
+                HBox.setHgrow(cancelButton, Priority.ALWAYS);
+                pane.setSpacing(10);
+
+
+                cancelButton.setOnAction(event -> {
+                    Conference getPatient = getTableView().getItems().get(getIndex());
+                    System.out.println(getPatient.getId() + "   " + getPatient.getName());
+                });
+
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                setGraphic(empty ? null : pane);
+            }
+        });
+
+
+        tableViewListUser.getColumns().add(actionCol);
+        tableViewListUser.setItems(data);
 
 
     }
@@ -246,5 +488,20 @@ public class ConferenceController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         txtNameConference.setText("");
         txtDescriptionSummary.setText("");
+    }
+
+    public void registerConference(ActionEvent actionEvent) {
+        accountLoginSession = new AccountLoginSession();
+        Account account = accountLoginSession.getAccountLogin();
+        if (account == null) {
+            System.out.println("Account not login");
+        } else {
+            System.out.println("================>>>>>>> Account Login: ");
+            System.out.println(account.toString());
+            System.out.println("================>>>>>>> ID Conference Register: " + txtIdConference.getText());
+            accounts_conferencesRepository = new Accounts_ConferencesRepositoryImpl();
+
+
+        }
     }
 }

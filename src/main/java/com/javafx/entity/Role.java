@@ -55,7 +55,7 @@ public class Role implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", accounts=" + accounts.toString() +
+                ", accounts=" + "\n" + accounts.toString() +
                 '}';
     }
 }

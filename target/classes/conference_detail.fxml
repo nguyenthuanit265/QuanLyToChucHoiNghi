@@ -2,112 +2,152 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="490.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.javafx.controller.ConferenceController">
+<AnchorPane fx:controller="com.javafx.controller.ConferenceController" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="1000.0" style="-fx-background-color: #F2F2F2" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox layoutY="63.0" prefHeight="426.0" prefWidth="802.0">
+        <VBox layoutY="-1.0" prefHeight="407.0" prefWidth="772.0">
+            <TextField fx:id="txtIdConference" visible="false" disable="false" editable="false"
+                       style="-fx-background-color: #F2F2F2"/>
             <children>
-                <HBox prefWidth="300.0">
+                <Label style="-fx-background-color: #F2F2F2" text="Chi tiết hội nghị" wrapText="true">
+                    <font>
+                        <Font size="15.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                </Label>
+                <HBox>
                     <children>
-                        <VBox prefHeight="426.0" prefWidth="333.0">
-                            <children>
-                                <Label text="Tên hội nghị" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="10.0" text="Mô tả ngắn gọn" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="40.0" text="Mô tả chi tiết" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="71.0" text="Địa điểm" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="101.0" text="Thời gian bắt đầu" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="132.0" text="Thời gian kết thúc" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                                <Label layoutX="10.0" layoutY="162.0" text="Hình ảnh" wrapText="true">
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                </Label>
-                            </children>
-                            <padding>
-                                <Insets left="30.0"/>
-                            </padding>
-                        </VBox>
+                        <Label style="-fx-background-color: #F2F2F2" text="Tên hội nghị" wrapText="true">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtNameConference" editable="false" style="-fx-background-color: #F2F2F2">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </TextField>
                     </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
                 </HBox>
-                <HBox prefWidth="603.0">
+                <HBox layoutX="10.0" layoutY="42.0">
                     <children>
-                        <VBox prefHeight="426.0" prefWidth="694.0">
-                            <children>
-                                <TextField fx:id="txtNameConference" editable="false">
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                </TextField>
-
-                                <TextField fx:id="txtDescriptionSummary" editable="false">
-                                    <VBox.margin>
-                                        <Insets bottom="5.0"/>
-                                    </VBox.margin>
-                                    <font>
-                                        <Font size="20.0"/>
-                                    </font>
-                                </TextField>
-                            </children>
-                        </VBox>
+                        <Label style="-fx-background-color: #F2F2F2" text="Mô tả ngắn gọn" wrapText="true">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtDescriptionSummary" editable="false"
+                                   style="-fx-background-color: #F2F2F2"/>
+                    </children>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="10.0" layoutY="72.0">
+                    <children>
+                        <Label text="Mô tả chi tiết">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtDescriptionDetail" editable="false" style="-fx-background-color: #F2F2F2">
+                            <HBox.margin>
+                                <Insets left="15.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="10.0" layoutY="103.0">
+                    <children>
+                        <Label text="Địa điểm">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextArea fx:id="txtLocation" editable="false"
+                                  style="-fx-background-color: #F2F2F2; -fx-control-inner-background: #F2F2F2;">
+                            <HBox.margin>
+                                <Insets left="15.0"/>
+                            </HBox.margin>
+                        </TextArea>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="10.0" layoutY="133.0">
+                    <children>
+                        <Label text="Thời điểm bắt đầu">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtTimeStart" editable="false" style="-fx-background-color: #F2F2F2">
+                            <HBox.margin>
+                                <Insets left="15.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="10.0" layoutY="164.0">
+                    <children>
+                        <Label text="Thời điểm kết thúc">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtTimeEnd" editable="false" style="-fx-background-color: #F2F2F2">
+                            <HBox.margin>
+                                <Insets left="15.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="10.0" layoutY="194.0">
+                    <children>
+                        <Label text="Hình ảnh">
+                            <HBox.margin>
+                                <Insets left="100.0"/>
+                            </HBox.margin>
+                        </Label>
+                        <ImageView fx:id="imgConference" fitHeight="180.0" fitWidth="397.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
                     </children>
                 </HBox>
             </children>
-        </HBox>
-        <Label prefHeight="63.0" prefWidth="287.0" text="Thông tin chi tiết hội nghị">
+        </VBox>
+        <TableView fx:id="tableViewListUser" layoutY="434.0" prefHeight="165.0" prefWidth="1000.0">
+
+        </TableView>
+        <Button fx:id="btnRegisterConference" layoutX="772.0" layoutY="14.0" mnemonicParsing="false"
+                onAction="#registerConference"
+                style="-fx-background-color: #0073b1; -fx-text-fill: white;" text="Đăng ký tham dự">
             <font>
-                <Font size="24.0"/>
+                <Font name="System Bold" size="15.0"/>
             </font>
-        </Label>
+        </Button>
     </children>
 </AnchorPane>
