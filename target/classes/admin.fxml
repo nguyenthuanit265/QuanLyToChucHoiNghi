@@ -92,9 +92,8 @@
                     <children>
 
                         <Button fx:id="btnAccounts" alignment="BASELINE_LEFT" onAction="#findAllAccount"
-                                prefWidth="300.0"
-                                style="-fx-background-color: #333645;" text="Account" textFill="#7c8184"
-                                underline="false">
+                                prefWidth="300.0" style="-fx-background-color: #333645;" text="Account"
+                                textFill="#7c8184" underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
@@ -115,7 +114,6 @@
                     <children>
 
                         <Button fx:id="btnRoles" alignment="BASELINE_LEFT" onAction="#findAllRole" prefWidth="300.0"
-
                                 style="-fx-background-color: #333645;" text="Role" textFill="#7c8184" underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
@@ -161,9 +159,8 @@
                       minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="300.0" styleClass="btns">
                     <children>
 
-                        <Button fx:id="btnSignUp" alignment="BASELINE_LEFT" onAction="#SignUp" prefWidth="300.0"
-                                style="-fx-background-color: #333645;" text="Sign Up/Login" textFill="#7c8184"
-                                underline="false">
+                        <Button fx:id="btnAuthen" alignment="BASELINE_LEFT" onAction="#SignUp_Login" prefWidth="300.0"
+                                style="-fx-background-color: #333645;" textFill="#7c8184" underline="false">
                             <font>
                                 <Font name="Calibri Light" size="20.0"/>
                             </font>
@@ -205,7 +202,6 @@
                                 <Font size="18.0"/>
                             </font>
                         </Label>
-                        <Label fx:id="lblEmailLogin" layoutX="818.0" layoutY="29.0" wrapText="true"/>
                         <Button fx:id="btnRefresh" layoutX="1029.0" layoutY="13.0" mnemonicParsing="false"
                                 onAction="#Refresh" visible="true">
                             <graphic>
@@ -218,6 +214,13 @@
 
 
                         </Button>
+                        <SplitMenuButton fx:id="splitMenuButtonAccountLogin" layoutX="855.0" layoutY="20.0"
+                                         mnemonicParsing="false" visible="false">
+                            <!--                            <items>-->
+                            <!--                                <MenuItem mnemonicParsing="false" text="Action 1"/>-->
+                            <!--                                <MenuItem mnemonicParsing="false" text="Action 2"/>-->
+                            <!--                            </items>-->
+                        </SplitMenuButton>
 
                         <!--                        <Label alignment="CENTER" layoutX="659.0" layoutY="18.0" maxHeight="-Infinity"-->
                         <!--                               maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0"-->
@@ -354,7 +357,7 @@
                             AnchorPane.topAnchor="10.0">
 
                     <children>
-                        <TreeView fx:id="treeView" prefHeight="600.0" prefWidth="1200.0"/>
+                        <TreeView fx:id="treeView" prefHeight="462.0" prefWidth="1200.0"/>
                     </children>
 
                     <!--                <TableView fx:id="tableViews" editable="true" prefWidth="720.0" AnchorPane.bottomAnchor="10.0"-->
@@ -410,6 +413,9 @@
 
 
                 </AnchorPane>
+                <HBox fx:id="hBoxSave" prefHeight="119.0" prefWidth="1200.0"/>
+
+                <HBox fx:id="hBoxUpdate" prefHeight="119.0" prefWidth="1200.0"/>
             </children>
 
         </VBox>

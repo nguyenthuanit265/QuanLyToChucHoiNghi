@@ -47,7 +47,7 @@ public class Account implements Serializable {
 //            insertable = false, updatable = false)
 //    private Conference conference;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
     List<Accounts_Conferences> registrations;
 
 
@@ -66,7 +66,7 @@ public class Account implements Serializable {
                 '}';
     }
 
-    public Account(String email, String username, String password, int roleId) {
+    public Account(String username, String email, String password, int roleId) {
         this.email = email;
         this.username = username;
         this.password = password;

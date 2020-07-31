@@ -72,7 +72,7 @@ public class ConferenceController implements Initializable {
 
     AccountLoginSession accountLoginSession;
 
-    Accounts_ConferencesRepository accounts_conferencesRepository;
+    Accounts_ConferencesRepository accounts_conferencesRepository = new Accounts_ConferencesRepositoryImpl();
 
 
     private double x, y;
@@ -196,6 +196,8 @@ public class ConferenceController implements Initializable {
             CustomButtonForUser(tableViews);
         } else if (roleNameAccount.equals("ROLE_ADMIN")) {
             CustomButtonForAdmin(tableViews);
+        } else {
+            CustomButtonForUserLoggedIn(tableViews);
         }
         tableViews.setItems(data);
 
@@ -320,6 +322,90 @@ public class ConferenceController implements Initializable {
     }
 
 
+    public void CustomButtonForUserLoggedIn(TableView<Object> tableViews) {
+        accountLoginSession = new AccountLoginSession();
+        Account account = accountLoginSession.getAccountLogin();
+        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
+        actionCol.setMinWidth(150);
+//        actionCol.setCellValueFactory(new PropertyValueFactory<Role, Role>("id"));
+        actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
+
+            private final Button cancelButton = new Button("Cancel");
+            private final Button listUserButton = new Button("List User");
+
+            private final HBox pane = new HBox(cancelButton, listUserButton);
+
+            {
+
+                cancelButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white; -fx-cursor: hand;");
+                listUserButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white; -fx-cursor: hand;");
+
+
+                cancelButton.setMaxWidth(Double.MAX_VALUE);
+                listUserButton.setMaxWidth(Double.MAX_VALUE);
+
+
+                HBox.setHgrow(cancelButton, Priority.ALWAYS);
+                HBox.setHgrow(listUserButton, Priority.ALWAYS);
+                pane.setSpacing(10);
+
+
+                cancelButton.setOnAction(event -> {
+                    Conference getPatient = getTableView().getItems().get(getIndex());
+                    System.out.println(getPatient.getId() + "   " + getPatient.getLocation());
+
+//                    getPatient.setDelete(true);
+//                    conferenceRepository.save(getPatient);
+//                    Lấy ra danh sách các hội nghị mà user đã tham gia
+                    List<Accounts_Conferences> accounts_conferences = account.getRegistrations();
+//                    Duyệt để kiểm tra hội nghị mà user muốn hủy có đăng ký chưa
+                    for (Accounts_Conferences item : accounts_conferences) {
+                        if (item.getConference().getId() == getPatient.getId()) {
+                            System.out.println("=========================>>>>>>>>>>>>>>>>>> Hội nghị này đang tham gia");
+                            Date now = new Date();
+                            if (now.before(item.getConference().getTimeStartEvent())) {
+                                System.out.println("===================>>>>>>>>>>>>>>>>>>>> Canceled");
+                                item.setCancel(true);
+
+                                accounts_conferencesRepository.save(item);
+
+                            } else {
+                                System.out.println("===================>>>>>>>>>>>>>>>>>>>> Not Cancel");
+                                System.out.println("===================>>>>>>>>>>>>>>>>>>>> Because Event completed or happening");
+                            }
+                            break;
+                        }
+                    }
+
+
+                    processConference(tableViews);
+                });
+
+
+                listUserButton.setOnAction(event -> {
+                    Conference getPatient = getTableView().getItems().get(getIndex());
+                    System.out.println(getPatient.getId() + "   " + getPatient.getLocation());
+                    List<Accounts_Conferences> accounts = getPatient.getRegistrations();
+                    System.out.println(accounts);
+
+
+                });
+
+
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                setGraphic(empty ? null : pane);
+            }
+        });
+
+
+        tableViews.getColumns().add(actionCol);
+    }
+
     private void printRow(Conference item) throws IOException {
         System.out.println(item.toString());
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/conference_detail.fxml"));
@@ -382,12 +468,16 @@ public class ConferenceController implements Initializable {
         tableViewListUser = (TableView) root1.lookup("#tableViewListUser");
         tableViewListUser.setEditable(true);
         tableViewListUser.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+
+//        Lấy ra danh sách các User đang tham gia hội nghị
         List<Accounts_Conferences> accounts_conferences = conference.getRegistrations();
         System.out.println(accounts_conferences);
         List<Account> accounts = new ArrayList<>();
-
         for (Accounts_Conferences temp : accounts_conferences) {
-            accounts.add(temp.getAccount());
+            if (temp.isCancel() == false) {
+                accounts.add(temp.getAccount());
+            }
         }
 
         System.out.println(accounts);
@@ -441,44 +531,40 @@ public class ConferenceController implements Initializable {
 
         tableViewListUser.getColumns().addAll(numberCol, idCol, usernameCol, emailCol);
 
-        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
-        actionCol.setMinWidth(100);
-
-        actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
-
-            private final Button cancelButton = new Button("Cancel");
-
-            private final HBox pane = new HBox(cancelButton);
-
-            {
-
-                cancelButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white;-fx-cursor: hand;");
-
-
-                cancelButton.setMaxWidth(Double.MAX_VALUE);
-
-
-                HBox.setHgrow(cancelButton, Priority.ALWAYS);
-                pane.setSpacing(10);
-
-
-                cancelButton.setOnAction(event -> {
-                    Conference getPatient = getTableView().getItems().get(getIndex());
-                    System.out.println(getPatient.getId() + "   " + getPatient.getName());
-                });
-
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-
-                setGraphic(empty ? null : pane);
-            }
-        });
-
-
-        tableViewListUser.getColumns().add(actionCol);
+//        TableColumn actionCol = new TableColumn<Conference, Void>("Action");
+//        actionCol.setMinWidth(100);
+//
+//        actionCol.setCellFactory(param -> new TableCell<Conference, Void>() {
+//
+//            private final Button cancelButton = new Button("Cancel");
+//
+//            private final HBox pane = new HBox(cancelButton);
+//
+//            {
+//
+//                cancelButton.setStyle("-fx-background-color: #d9455f; -fx-text-fill: white;-fx-cursor: hand;");
+//                cancelButton.setMaxWidth(Double.MAX_VALUE);
+//                HBox.setHgrow(cancelButton, Priority.ALWAYS);
+//                pane.setSpacing(10);
+//
+//
+//                cancelButton.setOnAction(event -> {
+//                    Conference getPatient = getTableView().getItems().get(getIndex());
+//                    System.out.println(getPatient.getId() + "   " + getPatient.getName());
+//                });
+//
+//            }
+//
+//            @Override
+//            protected void updateItem(Void item, boolean empty) {
+//                super.updateItem(item, empty);
+//
+//                setGraphic(empty ? null : pane);
+//            }
+//        });
+//
+//
+//        tableViewListUser.getColumns().add(actionCol);
         tableViewListUser.setItems(data);
 
 

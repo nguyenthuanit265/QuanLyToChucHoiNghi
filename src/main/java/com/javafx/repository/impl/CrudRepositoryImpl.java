@@ -138,8 +138,8 @@ public abstract class CrudRepositoryImpl<T, K extends Serializable>
     public List<T> findAllActive() {
         List<T> objects = null;
 
-        try {
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
+
             Transaction trans = session.beginTransaction();
 //            Query query = session.createQuery("from " + clazz.getName() + " where is_delete=false");
 //            objects = query.list();

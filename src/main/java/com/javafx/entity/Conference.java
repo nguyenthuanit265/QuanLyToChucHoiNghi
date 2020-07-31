@@ -52,7 +52,10 @@ public class Conference {
     List<Accounts_Conferences> registrations;
 
     @Column(name = "is_delete")
-    private boolean isDelete;
+    private boolean isDelete = false;
+
+    @Column(name = "is_block")
+    private boolean isBlock = false;
 
     @Override
     public String toString() {

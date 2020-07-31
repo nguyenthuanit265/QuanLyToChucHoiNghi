@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 //import com.javafx.Launch;
@@ -68,7 +69,7 @@ public class UIController implements Initializable {
 
 
     @FXML
-    Button btnSignUp;
+    Button btnAuthen;
 
     @FXML
     Label lblTitle;
@@ -99,18 +100,58 @@ public class UIController implements Initializable {
     Button btnLocations;
 
     @FXML
+    MenuButton splitMenuButtonAccountLogin;
+
+    @FXML
     Button btnRoles;
     ActionEvent actionEvent;
 
-    int chooseView = 1;
 
+    @FXML
+    HBox hBoxSave;
+
+    @FXML
+    HBox hBoxUpdate;
+    int chooseView = 0;
+
+    AccountLoginSession accountLoginSession;
 
     public void loadNavbar() throws IOException {
         AccountLoginSession accountLoginSession = new AccountLoginSession();
         String emailLoggedIn = accountLoginSession.getEmailAccountLogin();
-
+        Account account = accountLoginSession.getAccountLogin();
         Authorization();
-        lblEmailLogin.setText(emailLoggedIn);
+        splitMenuButtonAccountLogin.getItems().clear();
+        if (account == null) {
+
+            splitMenuButtonAccountLogin.setText("");
+            splitMenuButtonAccountLogin.setVisible(false);
+        } else {
+            splitMenuButtonAccountLogin.setText(account.getUsername());
+
+            MenuItem menuItemLogout = new MenuItem("Logout");
+            MenuItem menuItemAccountDetail = new MenuItem("Account Detail");
+            splitMenuButtonAccountLogin.getItems().addAll(menuItemLogout, menuItemAccountDetail);
+
+            splitMenuButtonAccountLogin.setVisible(true);
+
+            menuItemLogout.setOnAction(event -> {
+                System.out.println("=======>>>>>>>>>>>>>> Account want to logout");
+                try {
+                    accountLoginSession.deleteAccountLogin();
+                    loadBody();
+                } catch (BackingStoreException | IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+
+            menuItemAccountDetail.setOnAction(event -> {
+                System.out.println("=============>>>>>>>> Account detail");
+            });
+        }
+
+
     }
 
 
@@ -143,6 +184,7 @@ public class UIController implements Initializable {
     @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnAuthen.setText("SignUp/Login");
         Authorization();
         System.out.println("init");
 
@@ -254,6 +296,9 @@ public class UIController implements Initializable {
 //    }
 
     public void findAllRole(ActionEvent actionEvent) throws IOException {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
         lblTitle.setText("Danh sách quyền truy cập");
         blockHomePage();
         this.actionEvent = actionEvent;
@@ -276,6 +321,10 @@ public class UIController implements Initializable {
 
 
     public void findAllConference(ActionEvent actionEvent) {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
         lblTitle.setText("Danh sách hội nghị");
         blockHomePage();
 //        this.actionEvent = actionEvent;
@@ -295,6 +344,10 @@ public class UIController implements Initializable {
     }
 
     public void findAllLocation(ActionEvent actionEvent) {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
         lblTitle.setText("Danh sách địa điểm hội nghị");
         blockHomePage();
         this.actionEvent = actionEvent;
@@ -304,7 +357,7 @@ public class UIController implements Initializable {
 
         fitTableView();
         LocationController locationController = new LocationController();
-        locationController.processLocation(tableViews);
+        locationController.processLocation(tableViews, hBoxSave, hBoxUpdate);
     }
 
 
@@ -398,6 +451,10 @@ public class UIController implements Initializable {
     }
 
     public void findAllAccount(ActionEvent actionEvent) {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
         lblTitle.setText("Danh sách tài khoản");
         blockHomePage();
         this.actionEvent = actionEvent;
@@ -410,7 +467,7 @@ public class UIController implements Initializable {
 
         if (chooseView == 0) {
             fitTableView();
-            accountController.processAccount(tableViews);
+            accountController.processAccount(tableViews, hBoxSave);
         } else {
             fitTreeView();
             accountController.processAccount(treeViews);
@@ -418,8 +475,22 @@ public class UIController implements Initializable {
 
     }
 
-    public void SignUp() throws Exception {
-        Login_SignUpController login_signUpController = new Login_SignUpController();
+    public void SignUp_Login() throws Exception {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
+        accountLoginSession = new AccountLoginSession();
+        Account account = accountLoginSession.getAccountLogin();
+        if (account == null) {
+            Login_SignUpController login_signUpController = new Login_SignUpController();
+            login_signUpController.start(new Stage());
+        } else {
+            btnAuthen.setText("Logout");
+
+        }
+
+
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sign_up.fxml"));
 //        Parent root1 = (Parent) fxmlLoader.load();
 //        Stage stage = new Stage();
@@ -440,10 +511,14 @@ public class UIController implements Initializable {
 //        });
 //
 //        stage.show();
-        login_signUpController.start(new Stage());
+
     }
 
     public void loadHomePage(ActionEvent actionEvent) throws IOException {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
         loadNavbar();
         lblTitle.setText("Trang chủ");
         findAllConference(actionEvent);
@@ -452,13 +527,13 @@ public class UIController implements Initializable {
 
     public void blockHomePage() {
 
-//        chartImage.setVisible(false);
-//        homeContent.setVisible(false);
-//        paneLayoutHome.getChildren().clear();
-
     }
 
     public void findAllConference() {
+        hBoxSave.getChildren().clear();
+        hBoxUpdate.getChildren().clear();
+
+
         lblTitle.setText("Danh sách hội nghị");
         blockHomePage();
 

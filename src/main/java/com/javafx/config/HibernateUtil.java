@@ -25,7 +25,7 @@ public class HibernateUtil {
                 properties.put(Environment.PASS, "minhthuan123456");
 
                 properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-                properties.put("hibernate.show_sql", true);
+                properties.put("hibernate.show_sql", false);
                 properties.put("hibernate.format_sql", true);
                 properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
                 properties.put(Environment.HBM2DDL_AUTO, "update");

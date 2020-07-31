@@ -1,21 +1,16 @@
 package com.javafx.controller;
 
 import com.javafx.entity.Location;
-import com.javafx.entity.Location;
 import com.javafx.entity.Role;
 import com.javafx.repository.LocationRepository;
-import com.javafx.repository.LocationRepository;
-import com.javafx.repository.impl.LocationRepositoryImpl;
 import com.javafx.repository.impl.LocationRepositoryImpl;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -27,13 +22,34 @@ import java.util.List;
 public class LocationController {
     LocationRepository locationRepository = new LocationRepositoryImpl();
 
+    final TextField nameLocation = new TextField();
+    final TextField address = new TextField();
+    final TextField capacity = new TextField();
+
+
+    final TextField nameLocationEdit = new TextField();
+    final TextField addressEdit = new TextField();
+    final TextField capacityEdit = new TextField();
+
+    final TextField idEdit = new TextField();
+
+
     public LocationController() {
         String hashed = BCrypt.hashpw("123456", BCrypt.gensalt());
+        nameLocation.setMinWidth(300);
+        address.setMinWidth(300);
+        capacity.setMinWidth(50);
+
+
+        nameLocationEdit.setMinWidth(300);
+        addressEdit.setMinWidth(300);
+        capacityEdit.setMinWidth(50);
+        idEdit.setVisible(false);
 //        String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
 //        LocationRepository.save(new Location("test@gmai.com", "test", hashed, 1, 1));
     }
 
-    public void processLocation(TableView<Object> tableViews) {
+    public void processLocation(TableView<Object> tableViews, HBox hBoxSave, HBox hBoxUpdate) {
 
 
         tableViews.getColumns().clear();
@@ -104,6 +120,9 @@ public class LocationController {
         TableColumn actionCol = new TableColumn<Role, Void>("Action");
         actionCol.setMinWidth(130);
 //        actionCol.setCellValueFactory(new PropertyValueFactory<Role, Role>("id"));
+
+        HBox finalHBoxAdd = hBoxSave;
+
         actionCol.setCellFactory(param -> new TableCell<Location, Void>() {
             private final Button editButton = new Button("Edit");
             private final Button deleteButton = new Button("Delete");
@@ -129,13 +148,21 @@ public class LocationController {
                     System.out.println(getPatient.getId() + "   " + getPatient.getAddress());
                     getPatient.setDelete(true);
                     locationRepository.save(getPatient);
-                    processLocation(tableViews);
+                    hBoxSave.getChildren().clear();
+                    hBoxUpdate.getChildren().clear();
+                    processLocation(tableViews, hBoxSave, hBoxUpdate);
                 });
 
                 editButton.setOnAction(event -> {
                     Location getPatient = getTableView().getItems().get(getIndex());
                     System.out.println(getPatient.getId() + "   " + getPatient.getAddress());
-                    Location Location = locationRepository.findById(getPatient.getId());
+                    Location location = locationRepository.findById(getPatient.getId());
+
+                    nameLocationEdit.setText(location.getName());
+                    addressEdit.setText(location.getAddress());
+                    capacityEdit.setText(String.valueOf(location.getCapacity()));
+                    idEdit.setText(String.valueOf(location.getId()));
+
 
                 });
 
@@ -155,6 +182,12 @@ public class LocationController {
         tableViews.setItems(data);
 
 
+//        FORM ADD VS UPDATE
+        addAndUpdateLocation(tableViews, hBoxSave, hBoxUpdate, nameCol, addressCol, capacityCol);
+
+
+//        contentBodyAnchorPane.getChildren().add(hBoxAdd);
+
 //        tableViews.setRowFactory(tv -> {
 //            TableRow row = new TableRow();
 //            row.setOnMouseClicked(event -> {
@@ -168,5 +201,83 @@ public class LocationController {
 //            });
 //            return row;
 //        });
+    }
+
+    public void addAndUpdateLocation(TableView<Object> tableViews, HBox hBoxSave, HBox hBoxUpdate, TableColumn nameCol, TableColumn addressCol, TableColumn capacityCol) {
+
+        nameLocation.setPromptText("Name Location");
+        nameLocation.setMaxWidth(nameCol.getPrefWidth());
+
+
+        address.setMaxWidth(addressCol.getPrefWidth());
+        address.setPromptText("Address");
+
+
+        capacity.setMaxWidth(capacityCol.getPrefWidth());
+        capacity.setPromptText("Capacity");
+
+
+        nameLocationEdit.setPromptText("Name Location Edit");
+        nameLocationEdit.setMaxWidth(nameCol.getPrefWidth());
+
+
+        addressEdit.setMaxWidth(addressCol.getPrefWidth());
+        addressEdit.setPromptText("Address Edit");
+
+
+        capacityEdit.setMaxWidth(capacityCol.getPrefWidth());
+        capacityEdit.setPromptText("Capacity Edit");
+
+
+        final Button addButton = new Button("Add");
+        final Button updateButton = new Button("Update");
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+
+                locationRepository.save(new Location(
+                        nameLocation.getText(),
+                        address.getText(),
+                        Integer.parseInt(capacity.getText())));
+
+
+                nameLocation.clear();
+                address.clear();
+                capacity.clear();
+
+                hBoxSave.getChildren().clear();
+                hBoxUpdate.getChildren().clear();
+                processLocation(tableViews, hBoxSave, hBoxUpdate);
+            }
+        });
+
+        updateButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                locationRepository.save(new Location(Integer.parseInt(idEdit.getText()),
+                        nameLocationEdit.getText(),
+                        addressEdit.getText(),
+                        Integer.parseInt(capacityEdit.getText())));
+
+
+                nameLocationEdit.clear();
+                addressEdit.clear();
+                capacityEdit.clear();
+                idEdit.clear();
+
+                hBoxSave.getChildren().clear();
+                hBoxUpdate.getChildren().clear();
+                processLocation(tableViews, hBoxSave, hBoxUpdate);
+            }
+        });
+
+
+        hBoxSave.getChildren().addAll(nameLocation, address, capacity, addButton);
+        hBoxSave.setSpacing(30);
+
+
+        hBoxUpdate.getChildren().addAll(nameLocationEdit, addressEdit, capacityEdit, updateButton);
+        hBoxUpdate.setSpacing(30);
     }
 }

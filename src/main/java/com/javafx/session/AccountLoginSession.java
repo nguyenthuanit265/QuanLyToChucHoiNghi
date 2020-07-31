@@ -4,6 +4,7 @@ import com.javafx.entity.Account;
 import com.javafx.repository.AccountRepository;
 import com.javafx.repository.impl.AccountRepositoryImpl;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 public class AccountLoginSession {
@@ -52,5 +53,16 @@ public class AccountLoginSession {
             return accountRes;
         }
 
+    }
+
+    public boolean deleteAccountLogin() throws BackingStoreException {
+        if (emailLoggedIn.length() == 0) {
+            return false;
+        } else {
+            AccountRepository accountRepository = new AccountRepositoryImpl();
+            Account accountRes = accountRepository.findByEmail(emailLoggedIn);
+            userPreferences.clear();
+            return true;
+        }
     }
 }

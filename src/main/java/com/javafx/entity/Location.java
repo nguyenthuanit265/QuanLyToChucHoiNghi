@@ -24,6 +24,24 @@ public class Location implements Serializable {
     @Column(name = "is_delete")
     private boolean isDelete;
 
+
+    public Location() {
+    }
+
+    public Location(int id, String name, String address, int capacity) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.capacity = capacity;
+    }
+
+    public Location(String name, String address, int capacity) {
+        this.name = name;
+        this.address = address;
+        this.capacity = capacity;
+    }
+
+
     @Override
     public String toString() {
         return "Location{" +

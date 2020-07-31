@@ -1,15 +1,22 @@
 package com.javafx.controller;
 
+import com.javafx.dto.RoleDto;
 import com.javafx.entity.Account;
 import com.javafx.entity.BookCategory;
+import com.javafx.entity.Location;
 import com.javafx.entity.Role;
 import com.javafx.repository.AccountRepository;
+import com.javafx.repository.RoleRepository;
 import com.javafx.repository.impl.AccountRepositoryImpl;
+import com.javafx.repository.impl.RoleRepositoryImpl;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
@@ -17,11 +24,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import org.mindrot.jbcrypt.BCrypt;
+import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccountController {
     AccountRepository accountRepository = new AccountRepositoryImpl();
+    RoleRepository roleRepository = new RoleRepositoryImpl();
 
     public AccountController() {
         String hashed = BCrypt.hashpw("123456", BCrypt.gensalt());
@@ -59,7 +70,7 @@ public class AccountController {
 
     }
 
-    public void processAccount(TableView<Object> tableViews) {
+    public void processAccount(TableView<Object> tableViews, HBox hBoxSaveAndUpdate) {
 
 
         tableViews.getColumns().clear();
@@ -159,7 +170,8 @@ public class AccountController {
                     System.out.println(getPatient.getId() + "   " + getPatient.getEmail());
                     getPatient.setDelete(true);
                     accountRepository.save(getPatient);
-                    processAccount(tableViews);
+                    hBoxSaveAndUpdate.getChildren().clear();
+                    processAccount(tableViews, hBoxSaveAndUpdate);
                 });
 
                 editButton.setOnAction(event -> {
@@ -185,6 +197,8 @@ public class AccountController {
                     System.out.println(getPatient.getId() + "   " + getPatient.getEmail());
                     getPatient.setBlock(true);
                     accountRepository.save(getPatient);
+                    hBoxSaveAndUpdate.getChildren().clear();
+                    processAccount(tableViews, hBoxSaveAndUpdate);
                 });
             }
 
@@ -214,12 +228,85 @@ public class AccountController {
             return row;
         });
 
+
+        //        FORM ADD VS UPDATE
+        final TextField username = new TextField();
+        username.setPromptText("Username");
+        username.setMaxWidth(usernameCol.getPrefWidth());
+
+        final TextField email = new TextField();
+        email.setMaxWidth(emailCol.getPrefWidth());
+        email.setPromptText("Email");
+
+
+        final PasswordField password = new PasswordField();
+        password.setMaxWidth(emailCol.getPrefWidth());
+        password.setPromptText("Password");
+
+
+        ModelMapper modelMapper = new ModelMapper();
+        List<Role> roles = roleRepository.findAllActive();
+        List<RoleDto> roleDtos = roles.stream().map(role -> modelMapper.map(role, RoleDto.class)).collect(Collectors.toList());
+
+        ObservableList<RoleDto> dataRoles
+                = FXCollections.observableArrayList(roleDtos);
+        final ChoiceBox<RoleDto> choiceBoxRole = new ChoiceBox<>(dataRoles);
+        final int[] roleId = new int[1];
+
+        ChangeListener<RoleDto> changeListener = new ChangeListener<RoleDto>() {
+
+            @Override
+            public void changed(ObservableValue<? extends RoleDto> observable, RoleDto oldValue, RoleDto newValue) {
+                if (newValue != null) {
+                    System.out.println(newValue.getId());
+                    roleId[0] = newValue.getId();
+                }
+            }
+        };
+
+        // Sự kiện khi thay đổi Item trên ChoiceBox
+        choiceBoxRole.getSelectionModel().selectedItemProperty().addListener(changeListener);
+
+
+        final Button addButton = new Button("Add");
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String hashed = BCrypt.hashpw(password.getText(), BCrypt.gensalt());
+                System.out.println("role id add user: " + roleId[0]);
+                if (roleId[0] == 0 || roleId == null) {
+                    roleId[0] = 4; // ROLE_USER
+                }
+
+                accountRepository.save(new Account(
+                        username.getText(),
+                        email.getText(),
+                        hashed
+                        , roleId[0]));
+//                data.add(new Location(
+//                        nameLocation.getText(),
+//                        address.getText(),
+//                        Integer.parseInt(capacity.getText())));
+
+
+                username.clear();
+                email.clear();
+                password.clear();
+                hBoxSaveAndUpdate.getChildren().clear();
+                processAccount(tableViews, hBoxSaveAndUpdate);
+            }
+        });
+
+
+        hBoxSaveAndUpdate.getChildren().addAll(username, email, password, choiceBoxRole, addButton);
+        hBoxSaveAndUpdate.setSpacing(30);
+
+
     }
 
     private void printRow(Account item) {
 
         System.out.println(item.toString());
-
 
 
     }

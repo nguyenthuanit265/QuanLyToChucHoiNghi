@@ -25,4 +25,8 @@ public class Accounts_Conferences {
     private boolean isDelete = false;
 
 
+    @Column(name = "is_cancel")
+    private boolean isCancel = false;
+
+
 }

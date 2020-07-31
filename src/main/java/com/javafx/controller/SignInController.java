@@ -79,7 +79,7 @@ public class SignInController implements Initializable {
 
 
         if (checkLogin() == false) {
-            errorMessage = "Kiểm tra emaik, mật khẩu";
+            errorMessage = "Kiểm tra email, mật khẩu";
             validateFormLogin(errorMessage);
             return;
         } else {
@@ -103,7 +103,7 @@ public class SignInController implements Initializable {
 
             closeFormLogin();
 
-            login_signUpController.closeIfLogggedIn();
+//            login_signUpController.closeIfLogggedIn();
 
         }
 
